@@ -1,4 +1,4 @@
-telegraph
+Telegraph Avenue Complete Streets Project Data Revisualization
 =========
 
-Infoiz project for Telegraph Ave Complete Streets survey daya
+For Information Visualization and Presentation, Spring 2014
