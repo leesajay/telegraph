@@ -24,3 +24,21 @@ cur.execute(SQL)
 conn.commit()
 cur.close()
 conn.close()
+
+#populate the table
+
+conn = s.connect("telegraph.db")
+conn.text_factory = str
+cur = conn.cursor()
+for item in databaseInput:
+    if item != databaseInput[0]:
+        SQL = "INSERT INTO r VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+        cur.execute(SQL, item)
+        conn.commit()
+cur.close()
+conn.close()
+
+
+    
+            
+
