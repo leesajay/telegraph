@@ -1,4 +1,4 @@
-# GRAPH 1: Is current config good for <mode of transit>
+# PANE 1: Is current config good for <mode of transit>, plus high and low priority modes for improvement
 # Description/output
 # Filtered on primary transit mode
 #     Current config is good for--list of the following lists
@@ -15,10 +15,11 @@
 #   select count of each answer where mode is whatever is selected and append to list
 # select count of priority1 = bikes, cars, etc, where mode is selected and append to list
 # select count of priority4 = bikes cars, etc where mode is selected and append to list
-# final output is [[ped config answer counts], [bike config answers], [car config answers], [transit config answers]],
+# final output is nested lists of ints [[ped config answer counts], [bike config answers], [car config answers], [transit config answers]],
 #   [hiPri ped counts, hiPri bike count, hiPri car count, hiPri transit count], [another list same as hiPri but loPri]]
 
 import sqlite3 as s
+import random
 
 def answerCount(targetAnswers, targetField, filterField, filterValue):
     '''Takes a tuple of possible answer values in the target field, the name of the target field, 
@@ -36,37 +37,97 @@ def answerCount(targetAnswers, targetField, filterField, filterValue):
     return returnList
 
 
-conn = s.connect("../telegraph.db")
-conn.text_factory = str
-cur = conn.cursor()
+#this will become the Pane 1 routing function
+def makePane1():
+    conn = s.connect("../telegraph.db")
+    conn.text_factory = str
+    cur = conn.cursor()
 
-#this will become the graph1 routing function
-#probably should put the opening/closing of connection and cursor in that function when we get to that
-graphData = []
-filterField = "Mode1"
-filterValue = "%Biking%" # this will be pulled in from filter post request. NOTE THAT WE WILL HAVE TO WRAP OUR FILTER PARAMETER IN THE %S!!
+    graphData = []
+    filterField = "Mode1"
+    filterValue = "%Biking%" # this will be pulled in from filter post request. NOTE THAT WE WILL HAVE TO WRAP OUR FILTER PARAMETER IN THE %S!!
 
-#for "Does current config work?" question
-configAnswers = ("Strongly Agree", "Agree", "No Opinion", "Disagree", "Strongly Disagree", "") 
-configTargets = ("GoodPeds", "GoodBikes", "GoodCars", "GoodTransit")
-configuration= []
-for item in configTargets:
-    configuration.append(answerCount(configAnswers, item, filterField, filterValue))
-# print(configuration)
-graphData.append(configuration)
+    #for "Does current config work?" question
+    configAnswers = ("Strongly Agree", "Agree", "No Opinion", "Disagree", "Strongly Disagree", "") 
+    configTargets = ("GoodPeds", "GoodBikes", "GoodCars", "GoodTransit")
+    configuration= []
+    for item in configTargets:
+        configuration.append(answerCount(configAnswers, item, filterField, filterValue))
+    # print(configuration)
+    graphData.append(configuration)
 
-#for the highest priority improvements chart
-priorityAnswers = ("Biking", "Driving", "Transit", "Walking")
-hiPri = answerCount(priorityAnswers, "Improve1", filterField, filterValue)
-#print(hiPri)
-graphData.append(hiPri)
-#print(graphData)
+    #for the highest priority improvements chart
+    priorityAnswers = ("Biking", "Driving", "Transit", "Walking")
+    hiPri = answerCount(priorityAnswers, "Improve1", filterField, filterValue)
+    #print(hiPri)
+    graphData.append(hiPri)
+    #print(graphData)
 
-#for the lowest priority improvements chart
-loPri = answerCount(priorityAnswers, "Improve4", filterField, filterValue)
-#print(loPri)
-graphData.append(loPri)
-#print(graphData)
+    #for the lowest priority improvements chart
+    loPri = answerCount(priorityAnswers, "Improve4", filterField, filterValue)
+    #print(loPri)
+    graphData.append(loPri)
+    #print(graphData)
 
-cur.close()
-conn.close()
+    cur.close()
+    conn.close()
+    
+    #return statement will hand graphData object off to the front end
+
+#PANE 2: showing random comments 
+# What people said (not from same person):
+# field: Like
+# field: WishDifferent
+# one random from fields IdeasCars, IdeasTransit, IdeaseBikes, IdeasPeds
+# output is list of strings, ["random Like", "random WishDifferent", "random idea field 
+# (so we can label it on the page)", "random idea"]
+#psuedocode:
+#initialize list to hold strings
+#generate random number
+#use random number to select a record with that responseID and select Like from that ID's record and add to list
+#generate another random number
+#use it to select another record and get that ID's WishDifferent string and add to list
+#choose ideas field randomly
+#generate another random number
+#use it to select the contents of the randomly chosen ideas field and add to list along with the field label
+
+# NOTE: other things in Pane 2 will be static, we will need to handpick the data for that
+
+def getRandom(targetField):
+    conn = s.connect("../telegraph.db")
+    conn.text_factory = str
+    cur = conn.cursor()
+
+    responseID = str(random.randint(1,1108))
+    SQL = "SELECT " + targetField + " FROM r WHERE ResponseID = ?;"
+    data = (responseID,)
+    cur.execute(SQL, data)
+    candidate = cur.fetchone()[0]
+    #I have tried many combos of different Booleans to exclude both None and '' and I can never get them both
+    # excluded and I don't know why!!
+    if not candidate == None: 
+        cur.close()
+        conn.close()
+        return candidate
+    else:
+        getRandom(targetField)
+    
+    
+def makePane2():    
+    textData = []
+    textData.append(getRandom("Like"))
+    textData.append(getRandom("WishDifferent"))
+    randomIdea = random.choice(["IdeasCars", "IdeasTransit", "IdeaseBikes", "IdeasPeds"])
+    textData.append(randomIdea)
+    textData.append(getRandom(randomIdea))
+    return textData
+        
+    #return statement will hand textData object off to the front end
+
+#print(makePane2())
+
+#PANE 3: survey respondent info
+# How often are you on teleGraph
+# Where do you live graph
+# Primary mode of transit graph
+# Connection to telegraph venn diagram
