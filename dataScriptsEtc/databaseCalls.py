@@ -13,7 +13,7 @@
 
 # Pseudocode
 # initialize lists for peds, bikes, cars, transit, highPriority and lowPriority
-# for each of peds, cars, etc:
+# for each mode (peds, cars) etc:
 #   select count of each answer where mode is whatever is selected and append to list
 # select count of priority1 = bikes, cars, etc, where mode is selected and append to list
 # select count of priority4 = bikes cars, etc where mode is selected and append to list
@@ -22,38 +22,36 @@
 
 import sqlite3 as s
 
+def answerCount(targetAnswers, targetField, filterField, filterValue):
+    '''Takes a tuple of possible answer values in the target field, the name of the target field, 
+    the name of the field  that the query filters on, and a value for the query to filter that field on. 
+    returns a list of counts for each answer in the target field (in the order the answers
+    were supplied in the tuple)'''
+    
+    returnList = []
+    for item in targetAnswers:
+        data = (filterValue, item)
+        #technically I know it's not "safe" to build SQL queries this way but b/c it's a SELECT and we are supplying the data I think it's ok
+        SQL = "SELECT COUNT(" + targetField + ") from r WHERE " + filterField + " LIKE ? AND " + targetField + " = ?;" #gets count of each answer in the target field
+        cur.execute(SQL, data)
+        returnList.append((cur.fetchone()[0])) #appends count to the list
+    return returnList
+
+
 conn = s.connect("../telegraph.db")
 conn.text_factory = str
 cur = conn.cursor()
 
-# #test connection
-# cur.execute("SELECT * FROM r WHERE ResponseID = '1';")
-# print(cur.fetchone())
-
 #graph1
-#sample will be for respondents who use a bike as a primary transit mode
-mode = "%Biking%" #NOTE THAT WE WILL HAVE TO WRAP OUR FILTER PARAMETER IN THE %S!!
-finalObj = [] #not gonna use this yet, just building the configuration list first
-configuration = []
-pedsCon = []
-bikesCon = []
-carsCon =[]
-transCon = []
+#sample test data
+filterField = "Mode1"
+filterValue = "%Biking%" # this will be pulled in from filter post request. NOTE THAT WE WILL HAVE TO WRAP OUR FILTER PARAMETER IN THE %S!!
+answers = ("Strongly Agree", "Agree", "No Opinion", "Disagree", "Strongly Disagree", "") 
+target = "GoodPeds"
 
-
-#Molly--eventually I think it would make sense to make this a function, so that answerCount(GoodPeds, mode)
-# would return the appropriate list and then that would get added to the config file. I can write another one
-# for the priority lists. So then our routing functions will just be calling the necessary answerCount functions with the 
-#parameters from the filter and the container. Not sure I am explaining it right...
-answers = ("Strongly Agree", "Agree", "No Opinion", "Disagree", "Strongly Disagree", "")
-for item in answers:
-    data = (mode, item)
-    SQL = "SELECT COUNT(GoodPeds) from r WHERE Mode1 LIKE ? AND GoodPeds = ?;" #gets count of each answer for peds
-    cur.execute(SQL, data)
-    pedsCon.append((cur.fetchone()[0])) #appends count to the list
-
-#pedsCon is verified as a list of ints that gets appended to configuration
-configuraton.append(pedsCon)
+test = answerCount(answers, target, filterField, filterValue)
+print(test)
+print(type(test[0]))
 
 cur.close()
 conn.close()
