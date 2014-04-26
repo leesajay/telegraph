@@ -1,26 +1,7 @@
-# PANE 1: Is current config good for <mode of transit>, plus high and low priority modes for improvement
-# Description/output
-# Filtered on primary transit mode
-#     Current config is good for--list of the following lists
-    #     Peds--list of values (count of responses) for each answer (strongly agree, agree, no opinion, disagree, strongly disagree, null)
-    #     bikes--list of values for each answer
-    #     cars--list of values for each answer
-    #     transit--list of values for each answer
-#     Highest priority for improvements--list of values (count of responses) for each cars, bikes, peds, transit
-#     Lowest priority for improvements--list of values for each of cars, bikes, peds, transit
-
-# Pseudocode
-# initialize lists for peds, bikes, cars, transit, highPriority and lowPriority
-# for each mode (peds, cars) etc:
-#   select count of each answer where mode is whatever is selected and append to list
-# select count of priority1 = bikes, cars, etc, where mode is selected and append to list
-# select count of priority4 = bikes cars, etc where mode is selected and append to list
-# final output is nested lists of ints [[ped config answer counts], [bike config answers], [car config answers], [transit config answers]],
-#   [hiPri ped counts, hiPri bike count, hiPri car count, hiPri transit count], [another list same as hiPri but loPri]]
-
 import sqlite3 as s
 import random
 
+#first, a constructor/helper function used by the other functions that actually make the data passed to the front end
 def answerCount(targetAnswers, targetField, filterField, operator, filterValue):
     '''Takes a tuple of possible answer values in the target field, the name of the target field, 
     the name of the field  that the query filters on, and a value for the query to filter that field on. 
@@ -44,6 +25,26 @@ def answerCount(targetAnswers, targetField, filterField, operator, filterValue):
 
     return returnList
 
+    
+# PANE 1: Is current config good for <mode of transit>, plus high and low priority modes for improvement
+# Description/output
+# Filtered on primary transit mode
+#     Current config is good for--list of the following lists
+    #     Peds--list of values (count of responses) for each answer (strongly agree, agree, no opinion, disagree, strongly disagree, null)
+    #     bikes--list of values for each answer
+    #     cars--list of values for each answer
+    #     transit--list of values for each answer
+#     Highest priority for improvements--list of values (count of responses) for each cars, bikes, peds, transit
+#     Lowest priority for improvements--list of values for each of cars, bikes, peds, transit
+
+# Pseudocode
+# initialize lists for peds, bikes, cars, transit, highPriority and lowPriority
+# for each mode (peds, cars) etc:
+#   select count of each answer where mode is whatever is selected and append to list
+# select count of priority1 = bikes, cars, etc, where mode is selected and append to list
+# select count of priority4 = bikes cars, etc where mode is selected and append to list
+# final output is nested lists of ints [[ped config answer counts], [bike config answers], [car config answers], [transit config answers]],
+#   [hiPri ped counts, hiPri bike count, hiPri car count, hiPri transit count], [another list same as hiPri but loPri]]
 
 #this will become the Pane 1 routing function
 def makePane1():
@@ -135,10 +136,8 @@ def makePane2():
 # Where do you live graph
 # Primary mode of transit graph
 # Connection to telegraph venn diagram
-# output (for now) is four objects (they can be combined later if nec).
+# functions are separate for now (they can be combined later if nec).
 # one for each chart
-# the venn diagram should be structured like so:
-# var sets = [{label: "A", size: 10}, {label: "B", size: 10}], overlaps = [{sets: [0,1], size: 2}];
 
 # 3a: frequency
 def getFrequency():
@@ -232,5 +231,37 @@ def getMode(priority):
     
 # print(getMode("Mode1"))
 # print(getMode("Mode6")) 
-   
+
+#3d: venn diagram for connection to telegraph ave
+#the output should be structured like so:
+# sets = [{label: "A", size: 10}, {label: "B", size: 10}], overlaps = [{sets: [0,1], size: 2}]
+# first make the sets
+
+def makeSets(setParams):
+    '''takes dict where keys are fieldnames for set and values are answers to be included in the set;
+    returns a list of sets where each set is a dict with a label and a size, like so: 
+    [{label: "A", size: 10}, {label: "B", size: 10}]'''
     
+    conn = s.connect("../telegraph.db")
+    conn.text_factory = str
+    cur = conn.cursor()
+
+    sets = []
+    #get the count for each field (key) with the proper answer (value)
+    for key, value in setParams.iteritems():
+        SQL = "SELECT COUNT(ResponseID) FROM r WHERE " + key + "= ?;"
+        data = (value,)
+        cur.execute(SQL, data)
+        #make a dict entry in the format called for by the venn diagram library
+        count = cur.fetchone()[0]
+        setItem = {"label": key, "size": count}
+        sets.append(setItem)
+    
+    cur.close()
+    conn.close()    
+    return sets
+
+# tgraphConnection = {"Resident": "Yes", "Business": "Yes", "Work": "Yes", "Visit": "Yes", "Commute": "Yes"}
+# print(makeSets(tgraphConnection))
+
+
