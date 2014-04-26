@@ -12,9 +12,11 @@ from flask import Flask,request, session, escape, redirect, jsonify
 app = Flask(__name__)
 app.debug=True
 
-@app.route('/'):
-	#insert everything here
-	return flask.render_template("index.html")
+@app.route('/')
+#insert everything here
+def welcome():
+    app.logger.debug("welcome function called")
+    return flask.render_template("index.html")
 
 
 app.secret_key = os.urandom(24)
