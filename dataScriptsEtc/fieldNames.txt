@@ -10,6 +10,7 @@ Work
 Visit
 Commute
 Frequency
+	Values: Daily, A few times per week, A few times per month, Rarely
 Mode1
 	Values: ACT, BART, Biking, Driving, Walking, Other 
 Mode2
