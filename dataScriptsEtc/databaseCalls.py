@@ -1,5 +1,6 @@
 import sqlite3 as s
 import random
+import itertools
 
 #first, a constructor/helper function used by the other functions that actually make the data passed to the front end
 def answerCount(targetAnswers, targetField, filterField, operator, filterValue):
@@ -237,31 +238,42 @@ def getMode(priority):
 # sets = [{label: "A", size: 10}, {label: "B", size: 10}], overlaps = [{sets: [0,1], size: 2}]
 # first make the sets
 
-def makeSets(setParams):
-    '''takes dict where keys are fieldnames for set and values are answers to be included in the set;
-    returns a list of sets where each set is a dict with a label and a size, like so: 
-    [{label: "A", size: 10}, {label: "B", size: 10}]'''
+def makeVenn(setParams):
+    '''takes list of tuples where tuple[0] are fieldnames for set and tuple[1] are answers to be included in the set;
+    not using a dict for this b/c order of items needs to be totally predictable to generate the overlaps;
+    returns a list of lists: list[0] is a list sets where each set is a dict with a label and a size, like so: 
+    [{label: "A", size: 10}, {label: "B", size: 10}]; list[1] is a list of overlaps like so: [{sets: [0,1], size: 2}]'''
     
     conn = s.connect("../telegraph.db")
     conn.text_factory = str
     cur = conn.cursor()
-
+    
+    vennData = []
     sets = []
+    overlaps = []
     #get the count for each field (key) with the proper answer (value)
-    for key, value in setParams.iteritems():
-        SQL = "SELECT COUNT(ResponseID) FROM r WHERE " + key + "= ?;"
-        data = (value,)
+    for pair in setParams:
+        SQL = "SELECT COUNT(ResponseID) FROM r WHERE " + pair[0] + "= ?;"
+        data = (pair[1],)
         cur.execute(SQL, data)
         #make a dict entry in the format called for by the venn diagram library
         count = cur.fetchone()[0]
-        setItem = {"label": key, "size": count}
+        setItem = {"label": pair[0], "size": count}
         sets.append(setItem)
     
+    #to make the sets
+    #can use itertools.combinations() to produce iterators of all the combinations of a given size
+    #so call itertools.combinations(setParams, n) for n in range(len(setParams) - 1)
+    #each item in each itertools.combinations() object makes a database call: select count where item[0][0] = item[0][1] and item[1][0] = item[1][1]
+    #but how to get them labelled right? because the venn library needs them labeled with indices of list position in the set list
+    # might need to add a number to the original tuples in setParams
+      
     cur.close()
     conn.close()    
-    return sets
+    return vennData
 
-# tgraphConnection = {"Resident": "Yes", "Business": "Yes", "Work": "Yes", "Visit": "Yes", "Commute": "Yes"}
-# print(makeSets(tgraphConnection))
-
+tgraphConnection = [("Resident", "Yes"), ("Business", "Yes"), ("Work", "Yes"), ("Visit", "Yes"), ("Commute", "Yes")]
+print(makeVenn(tgraphConnection))
+    
+    
 
