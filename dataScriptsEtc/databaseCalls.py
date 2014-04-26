@@ -195,13 +195,42 @@ def getLocation():
     cur.execute(SQL)
     location["Other"] = cur.fetchone()[0]
 
-    
     cur.close()
     conn.close()
     return location
 
-print(getLocation())
+#print(getLocation())
+
+#3c: mode of transit--enter "Mode1" as param for first and "Mode6" for last
+# including empty string in the answers for now b/c I feel no response is maybe an illuminating data point for this
+# can't use answerCount() for this b/c of the slightly difft structure needed for the SQL statement
+def getMode(priority):
+    conn = s.connect("../telegraph.db")
+    conn.text_factory = str
+    cur = conn.cursor()
     
+    mode = []
+    modes = ("%ACT%", "%BART%", "%Biking%", "%Driving%", "%Walking%", "%Other%", "")
+    for item in modes:
+        SQL = "SELECT COUNT(" + priority + ") from r WHERE " + priority + " LIKE ?;"
+        data = (item,)
+        cur.execute(SQL, data)
+        mode.append(cur.fetchone()[0])
+        
+    cur.close()
+    conn.close()
     
+    #add BART and ACT counts together to make one transit count
+    ACT = mode.pop(0)
+    #ACT is now gone so BART is mode[0]
+    BART = mode[0]
+    #replace BART with sum of both
+    mode[0] = ACT + BART
+
+    return mode
+    #NOTE THAT THE ORDER OF THE LIST RETURNED: transit, bike, drive, walk, other
     
+# print(getMode("Mode1"))
+# print(getMode("Mode6")) 
+   
     
