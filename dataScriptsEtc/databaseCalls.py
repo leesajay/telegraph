@@ -21,58 +21,62 @@
 import sqlite3 as s
 import random
 
-def answerCount(targetAnswers, targetField, filterField, filterValue):
+def answerCount(targetAnswers, targetField, filterField, operator, filterValue):
     '''Takes a tuple of possible answer values in the target field, the name of the target field, 
     the name of the field  that the query filters on, and a value for the query to filter that field on. 
     returns a list of counts for each answer in the target field (in the order the answers
     were supplied in the tuple)'''
     
+    conn = s.connect("../telegraph.db")
+    conn.text_factory = str
+    cur = conn.cursor()
+
     returnList = []
     for item in targetAnswers:
         data = (filterValue, item)
         #technically I know it's not "safe" to build SQL queries this way but b/c it's a SELECT and we are supplying the data I think it's ok
-        SQL = "SELECT COUNT(" + targetField + ") from r WHERE " + filterField + " LIKE ? AND " + targetField + " = ?;" #gets count of each answer in the target field
+        SQL = "SELECT COUNT(" + targetField + ") from r WHERE " + filterField + " " + operator + " ? AND " + targetField + " = ?;" #gets count of each answer in the target field
         cur.execute(SQL, data)
         returnList.append((cur.fetchone()[0])) #appends count to the list
+    
+    cur.close()
+    conn.close()
+
     return returnList
 
 
 #this will become the Pane 1 routing function
 def makePane1():
-    conn = s.connect("../telegraph.db")
-    conn.text_factory = str
-    cur = conn.cursor()
 
     graphData = []
     filterField = "Mode1"
     filterValue = "%Biking%" # this will be pulled in from filter post request. NOTE THAT WE WILL HAVE TO WRAP OUR FILTER PARAMETER IN THE %S!!
-
+    operator = "LIKE"
     #for "Does current config work?" question
     configAnswers = ("Strongly Agree", "Agree", "No Opinion", "Disagree", "Strongly Disagree", "") 
     configTargets = ("GoodPeds", "GoodBikes", "GoodCars", "GoodTransit")
     configuration= []
     for item in configTargets:
-        configuration.append(answerCount(configAnswers, item, filterField, filterValue))
-    # print(configuration)
+        configuration.append(answerCount(configAnswers, item, filterField, operator, filterValue))
+#     print(configuration)
     graphData.append(configuration)
 
     #for the highest priority improvements chart
     priorityAnswers = ("Biking", "Driving", "Transit", "Walking")
-    hiPri = answerCount(priorityAnswers, "Improve1", filterField, filterValue)
+    hiPri = answerCount(priorityAnswers, "Improve1", filterField, operator, filterValue)
     #print(hiPri)
     graphData.append(hiPri)
     #print(graphData)
 
     #for the lowest priority improvements chart
-    loPri = answerCount(priorityAnswers, "Improve4", filterField, filterValue)
+    loPri = answerCount(priorityAnswers, "Improve4", filterField, operator, filterValue)
     #print(loPri)
     graphData.append(loPri)
     #print(graphData)
-
-    cur.close()
-    conn.close()
     
-    #return statement will hand graphData object off to the front end
+    return graphData #this needs to be edited to hand off to front end properly
+
+print(makePane1())
 
 #PANE 2: showing random comments 
 # What people said (not from same person):
@@ -131,3 +135,10 @@ def makePane2():
 # Where do you live graph
 # Primary mode of transit graph
 # Connection to telegraph venn diagram
+# output (for now) is four objects (they can be combined later if nec).
+# one for each chart
+# the venn diagram should be structured like so:
+# var sets = [{label: "A", size: 10}, {label: "B", size: 10}], overlaps = [{sets: [0,1], size: 2}];
+
+# 3a: frequency
+# frequency = answerCount("Daily", "A few times per week", "A few times per month", "Rarely"), "Frequency", "ResponseID", "IS NOT", "None") #those last parameters are just essentially dummies to satisfy the function
