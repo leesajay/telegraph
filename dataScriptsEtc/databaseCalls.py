@@ -76,7 +76,7 @@ def makePane1():
     
     return graphData #this needs to be edited to hand off to front end properly
 
-print(makePane1())
+# print(makePane1())
 
 #PANE 2: showing random comments 
 # What people said (not from same person):
@@ -141,4 +141,67 @@ def makePane2():
 # var sets = [{label: "A", size: 10}, {label: "B", size: 10}], overlaps = [{sets: [0,1], size: 2}];
 
 # 3a: frequency
-# frequency = answerCount("Daily", "A few times per week", "A few times per month", "Rarely"), "Frequency", "ResponseID", "IS NOT", "None") #those last parameters are just essentially dummies to satisfy the function
+def getFrequency():
+     frequency = answerCount(("Daily", "A few times per week", "A few times per month", "Rarely"), "Frequency", "ResponseID", "IS NOT", "None") #those last parameters are just essentially dummies to satisfy the function
+     # print(frequency)
+     return frequency
+
+# 3b: where do you live
+# want: a dict with key/values of place/count
+# keys: Oakland, Berkeley, San Francisco, Other East Bay, North Bay, South Bay, Other CA, Other
+# join r.HomeZIP to zips.City and select the count of records where zips.City = Oakland
+
+def getLocation():
+    location = {}
+    conn = s.connect("../telegraph.db")
+    conn.text_factory = str
+    cur = conn.cursor()
+    
+    #gets count for responses in these three cities
+    cities = ["Oakland", "Berkeley"]
+    for city in cities:
+        SQL = 'SELECT COUNT(ResponseID) from r LEFT JOIN zips on r.HomeZIP = zips.Zip WHERE zips.City = ?;'
+        data = (city,)    
+        cur.execute(SQL, data)
+        location[city] = cur.fetchone()[0]
+    
+    #gets count for these counties EXCLUDING the cities already counted 
+    counties = ["Marin", "San Mateo", "Santa Clara", "Alameda", "Contra Costa", "San Francisco"]
+    for county in counties:
+        SQL = '''SELECT COUNT(ResponseID) from r LEFT JOIN zips on r.HomeZIP = zips.Zip 
+        WHERE zips.County = ? AND zips.City NOT IN ("Oakland", "Berkeley");'''
+        data = (county,)
+        cur.execute(SQL, data)
+        location[county] = cur.fetchone()[0]
+        if location[county] == 0:
+            del location[county]
+    
+    #gets count for other CA (all CA zips excluding those already counted)
+    #NOTE THIS COUNT IS 0, JUST LIKE MARIN COUNTY, BUT DID NOT WANT TO DELETE (YET) 
+    #TO BE CLEAR THAT QUERY HAS BEEN RUN!! 
+    dataStr = "("
+    for x in range(90001, 96162):
+        dataStr += '\"' + str(x) + '\", '
+    dataStr += '\"96162\")'
+    SQL = '''SELECT COUNT(ResponseID) from r LEFT JOIN zips on r.HomeZIP = zips.Zip WHERE
+     r.HomeZIP IN ''' + dataStr + ''' AND zips.City NOT IN ("Oakland", "Berkeley") AND
+     zips.County NOT IN ("Marin", "San Mateo", "Santa Clara", "Alameda", "Contra Costa", "San Francisco");'''
+    cur.execute(SQL)
+    location["Other CA"] = cur.fetchone()[0]
+    
+    #gets count for other
+    SQL = '''SELECT COUNT(ResponseID) from r LEFT JOIN zips on r.HomeZIP = zips.Zip WHERE
+     zips.City IS NULL OR r.HomeZIP NOT IN ''' + dataStr + ';'
+    cur.execute(SQL)
+    location["Other"] = cur.fetchone()[0]
+
+    
+    cur.close()
+    conn.close()
+    return location
+
+print(getLocation())
+    
+    
+    
+    
