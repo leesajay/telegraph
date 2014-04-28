@@ -239,10 +239,11 @@ def getMode(priority):
 # first make the sets
 
 def makeVenn(setParams):
-    '''takes list of tuples where tuple[0] are fieldnames for set and tuple[1] are answers to be included in the set;
+    '''takes list of lists where item[0] are fieldnames for set, item[1] are answers to be included in the set;
     not using a dict for this b/c order of items needs to be totally predictable to generate the overlaps;
     returns a list of lists: list[0] is a list sets where each set is a dict with a label and a size, like so: 
-    [{label: "A", size: 10}, {label: "B", size: 10}]; list[1] is a list of overlaps like so: [{sets: [0,1], size: 2}]'''
+    [{label: "A", size: 10}, {label: "B", size: 10}]; list[1] is a list of overlaps like so: [{sets: [0,1], size: 2}]
+    set labels will be added to the items by the list.index() method.'''
     
     conn = s.connect("../telegraph.db")
     conn.text_factory = str
@@ -251,7 +252,7 @@ def makeVenn(setParams):
     vennData = []
     sets = []
     overlaps = []
-    #get the count for each field (key) with the proper answer (value)
+    #to get the sets, get the count for each field (key) with the proper answer (value)
     for pair in setParams:
         SQL = "SELECT COUNT(ResponseID) FROM r WHERE " + pair[0] + "= ?;"
         data = (pair[1],)
@@ -260,19 +261,69 @@ def makeVenn(setParams):
         count = cur.fetchone()[0]
         setItem = {"label": pair[0], "size": count}
         sets.append(setItem)
+        pair.append(setParams.index(pair))
+    vennData.append(sets)
     
-    #to make the sets
+    #to make the overlaps
     #can use itertools.combinations() to produce iterators of all the combinations of a given size
-    #so call itertools.combinations(setParams, n) for n in range(len(setParams) - 1)
+    #so call itertools.combinations(setParams, n) for n in range(2, len(setParams) + 1)
     #each item in each itertools.combinations() object makes a database call: select count where item[0][0] = item[0][1] and item[1][0] = item[1][1]
     #but how to get them labelled right? because the venn library needs them labeled with indices of list position in the set list
-    # might need to add a number to the original tuples in setParams
+    # list.index() method!! wheeeee. wait no. this won't work b/c by the time it's in the itertools context it has been detached from
+    # its original list position. so that does need to be put into the original setParams. Damn.  
+    
+    
+    for n in range(2, len(setParams) + 1):
+        nCombos = itertools.combinations(setParams, n)
+        for combo in nCombos:
+            overlapEntry = {}
+            #after much thinking, doing it one by one is going to be the way to go b/c of the fact that column names can't be parameterized
+            #do the database call here so right # of ?s can be inserted into SQL
+            #this is frustrating b/c it would be so much more elegant to have a makeSets function and a makeOverlaps function and call them both in makeVenn()
+            #and it's clearly possible b/c of the repeating patterns but it would take so much more time to do it that way now that I have a method that works even though it's clunky!!
+            #i started off making something extensible and now this is totally not at all. :(
+            if n == 2:
+                 #first make a string of the right # of ?s and the column names
+                SQL = "SELECT COUNT(ResponseID) FROM r WHERE " + combo[0][0] + " = ? AND " + combo[1][0] + " = ?;"
+                data = (combo[0][1], combo[1][1])
+                cur.execute(SQL, data)
+                count = cur.fetchone()[0]
+                overlapEntry["sets"] = [combo[0][2], combo[1][2]]
+                overlapEntry["size"] = count
+                overlaps.append(overlapEntry)
+            if n == 3:
+                SQL = "SELECT COUNT(ResponseID) FROM r WHERE " + combo[0][0] + " = ? AND " + combo[1][0] + " = ? AND " + combo[2][0] + " = ?;"
+                data = (combo[0][1], combo[1][1], combo[2][1])
+                cur.execute(SQL, data)
+                count = cur.fetchone()[0]
+                overlapEntry["sets"] = [combo[0][2], combo[1][2], combo[2][2]]
+                overlapEntry["size"] = count
+                overlaps.append(overlapEntry)
+            if n == 4:
+                SQL = "SELECT COUNT(ResponseID) FROM r WHERE " + combo[0][0] + " = ? AND " + combo[1][0] + " = ? AND " + combo[2][0] + " = ? AND " + combo[3][0] + " = ?;"
+                data = (combo[0][1], combo[1][1], combo[2][1], combo[3][1])
+                cur.execute(SQL, data)
+                count = cur.fetchone()[0]
+                overlapEntry["sets"] = [combo[0][2], combo[1][2], combo[2][2], combo[3][2]]
+                overlapEntry["size"] = count
+                overlaps.append(overlapEntry)
+            if n == 5:
+                SQL = "SELECT COUNT(ResponseID) FROM r WHERE " + combo[0][0] + " = ? AND " + combo[1][0] + " = ? AND " + combo[2][0] + " = ? AND " + combo[3][0] + " = ? AND " + combo[4][0] + " = ? ;"
+                data = (combo[0][1], combo[1][1], combo[2][1], combo[3][1], combo[4][1])
+                cur.execute(SQL, data)
+                count = cur.fetchone()[0]
+                overlapEntry["sets"] = [combo[0][2], combo[1][2], combo[2][2], combo[3][2], combo[4][2]]
+                overlapEntry["size"] = count
+                overlaps.append(overlapEntry)
+    vennData.append(overlaps)
+            
+            
       
     cur.close()
     conn.close()    
     return vennData
 
-tgraphConnection = [("Resident", "Yes"), ("Business", "Yes"), ("Work", "Yes"), ("Visit", "Yes"), ("Commute", "Yes")]
+tgraphConnection = [["Resident", "Yes"], ["Business", "Yes"], ["Work", "Yes"], ["Visit", "Yes"], ["Commute", "Yes"]]
 print(makeVenn(tgraphConnection))
     
     
