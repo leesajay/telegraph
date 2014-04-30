@@ -24,7 +24,11 @@ homeData = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80}
 
 primaryTransitData = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80}
 
-connectionToTeleData = [the venn diagram data, I still need to figure out what that looks like] 
+connectionToTeleData = [
+						{"sets": [{label: "Live", size: 10}, {label: "Work", size: 10}, {label: "Commute", size: 72}]},
+						{"overlaps": [{sets: [0,1,2], size: 2}, {sets: [0, 2], size: 3}]}
+						]
+
 
 I also have a function that will take a json object to update the whole first pane: placeholder object looks like this:
 updateOpinionsData = {"lowestPriority": {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80},
