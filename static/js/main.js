@@ -5,6 +5,36 @@
 function drawBarGraph(element, data){
 	//redraw if it already exists
 	//TODO
+
+	var dataset = [];
+	var titles = [];
+
+	for(var key in data){
+		dataset.push(data[key]);
+		titles.push(key);
+	}
+
+	var w = 300;
+	var h = 100;
+	var barPadding = 5;
+	var svg = d3.select("body").append("svg").attr("width", w)
+		.attr("height", h+20);
+	var bar = svg.selectAll("g").data(dataset).enter().append("g");
+	bar.append("rect").attr("x", function(d, i){
+			return i*(w/dataset.length);
+		})
+		.attr("y", function(d){
+			return h-d;
+		})
+		.attr("width", w/dataset.length-barPadding)
+		.attr("height", function(d){
+			return d;
+		});
+	bar.append("text")
+		.attr("x", function(d, i) { return i*(w/dataset.length); })
+		.attr("y", function(d) { return h+5;})
+		.attr("dy", ".35em")
+		.text(function(d, i) {return titles[i]});
 }
 //-----------------------------------------------------------------------------
 
