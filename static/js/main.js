@@ -17,7 +17,7 @@ function drawBarGraph(element, data){
 	var w = 300;
 	var h = 100;
 	var barPadding = 5;
-	var svg = d3.select("body").append("svg").attr("width", w)
+	var svg = element.append("svg").attr("width", w)
 		.attr("height", h+20);
 	var bar = svg.selectAll("g").data(dataset).enter().append("g");
 	bar.append("rect").attr("x", function(d, i){
