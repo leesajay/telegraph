@@ -50,7 +50,7 @@ function drawBarGraph(element, data){
 	//put the axes on
 	svg.append("g")
 		.attr("class", "x axis")
-		.attr("transform", "translate(0," + height + ")")
+		.attr("transform", "translate(0," + h + ")")
 		.call(xAxis);
 	svg.append("g")
 		.attr("class", "y axis")
