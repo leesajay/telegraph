@@ -14,8 +14,8 @@ function drawBarGraph(element, data){
 		titles.push(key);
 	}
 
-	var w = 300;
-	var h = 100;
+	var w = 500;
+	var h = 500;
 	var barPadding = 5;
 
 	//set up some stuff for the axis
@@ -60,7 +60,7 @@ function drawBarGraph(element, data){
 			.attr("y", 6)
 			.attr("dy", ".71em")
 			.style("text-anchor", "end")
-			.text("");
+			.text("Respondents");
 
 	//make the bar containers
 	var bar = svg.selectAll("g").data(dataset).enter().append("g");
