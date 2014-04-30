@@ -66,28 +66,17 @@ function drawBarGraph(element, data){
 			.style("text-anchor", "end")
 			.text("Respondents");
 
-	//make the bar containers
-	var bar = svg.selectAll("g").data(dataset).enter().append("g");
-	//make the actual bars
-	bar.append("rect").attr("x", function(d, i){
-			return i*(w/dataset.length);
-		})
-		.attr("y", function(d){
-			return h-d;
-		})
-		.attr("class", "bar")
-		.attr("width", w/dataset.length-barPadding)
-		.attr("height", function(d){
-			return d;
-		})
+	//make the bars
+	svg.selectAll(".bar")
+		.data(data)
+		.enter().append("rect")
+			.attr("class", "bar")
+			.attr("x", function(d, i) { return titles[i]; })
+			.attr("width", x.rangeBand())
+			.attr("y", function(d, i) { return y(dataset[i]); })
+			.attr("height", function(d, i) { return h - y(dataset[i]); })
 		.on('mouseover', tip.show)
-		.on('mouseout', tip.hide);
-	//make the text
-//	bar.append("text")
-//		.attr("x", function(d, i) { return i*(w/dataset.length); })
-//		.attr("y", function(d) { return h+5;})
-//		.attr("dy", ".35em")
-//		.text(function(d, i) {return titles[i]});
+		.on('mouseout', tip.hide)
 }
 //-----------------------------------------------------------------------------
 
