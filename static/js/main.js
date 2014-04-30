@@ -162,4 +162,16 @@ function connectionToTele(){
 		.on('mouseover', tip.show)
 		.on('mouseout', tip.hide);
 }
-
+//-----------------------------------------------------------------------------
+//main
+//-----------------------------------------------------------------------------
+currentlySuite();
+highestPriority();
+lowestPriority();
+loveQuote();
+hateQuote();
+randomQuote();
+useFrequency();
+home();
+primaryTransit();
+connectionToTele();
