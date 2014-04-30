@@ -4,6 +4,7 @@ from subprocess import check_output
 import flask
 import os
 import sqlite3 as s
+import itertools
 import random
 import string
 from flask import Flask,request, session, escape, redirect, jsonify
