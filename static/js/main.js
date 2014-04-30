@@ -4,7 +4,7 @@
 
 function drawBarGraph(element, data){
 	//redraw if it already exists
-	//TODO
+	//TODO ticks, tooltips
 
 	var dataset = [];
 	var titles = [];
@@ -143,8 +143,23 @@ function connectionToTele(){
 	//venn diagram
 	//var data = {{connectionToTeleData}};
 	var data = {};
-	var element = document.getElementById("connectionToTele");
 	//TODO venn diagram
-	
+	var sets = [{label: "Small", size: 10}, {label: "Big", size: 100}],
+		overlaps = [{sets: [0,1], size: 5}];
+
+	// get positions for each set
+	sets = venn.venn(sets, overlaps);
+
+	// draw the diagram
+	var diagram = venn.drawD3Diagram(d3.select("connectionToTele"), sets, 300, 300);
+
+	// add the tooltip to the diagram
+	var tip = d3.tip().attr("class", "d3-tip").html(
+		function (d,i) { return "Size=" + d['size'];});
+
+	diagram.svg.call(tip);
+	diagram.text.style('cursor', 'default')
+		.on('mouseover', tip.show)
+		.on('mouseout', tip.hide);
 }
 
