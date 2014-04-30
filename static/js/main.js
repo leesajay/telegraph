@@ -45,7 +45,7 @@ function drawBarGraph(element, data){
 
 	//fit the axes to the range of our data
 	x.domain(titles);
-	y.domain([0, d3.max(dataset));
+	y.domain([0, d3.max(dataset)]);
 
 	//put the axes on
 	svg.append("g")
