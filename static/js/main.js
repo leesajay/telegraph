@@ -26,6 +26,7 @@ function drawBarGraph(element, data){
 		.attr("y", function(d){
 			return h-d;
 		})
+		.attr("class", "bar")
 		.attr("width", w/dataset.length-barPadding)
 		.attr("height", function(d){
 			return d;
