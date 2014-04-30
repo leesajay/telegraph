@@ -2,6 +2,11 @@ I wrote the HTML to take variables from python, so when we render the page in fl
 	along the lines of render_page(variable=value)
 Here, I'll put the variable names and an example of what I'm expecting. I'm not totally sure if we can
 	just pass a json object like that and have it work, we can either look that up or test it out.
+	
+STILL NEEDED: ID for the filter variable that will be passed to the back end for the database call. 
+That needs to be plugged into the makePane1() function. Here are the values to pass:
+"%Biking%", "%Driving%", "%Transit%", "%Walking%"
+
 
 currentlySuitsData = {"car": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25},
 					"bike": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25,},
@@ -18,9 +23,9 @@ hateQuoteData = "heartburn sucks"
 
 randomQuoteData = "what what in the butt"
 
-useFrequencyData = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80}
+useFrequencyData = {'Rarely': 25, 'A few times per month': 145, 'A few times per week': 379, 'Daily': 534}
 
-homeData = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80}
+homeData = {'San Mateo County': 2, 'Berkeley': 102, 'Other': 20, 'Alameda County': 139, 'Santa Clara County': 2, 'San Francisco': 15, 'Oakland': 816, 'Contra Costa County': 12}
 
 primaryTransitData = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80}
 

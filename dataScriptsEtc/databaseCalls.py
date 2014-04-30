@@ -6,25 +6,24 @@ import itertools
 def answerCount(targetAnswers, targetField, filterField, operator, filterValue):
     '''Takes a tuple of possible answer values in the target field, the name of the target field, 
     the name of the field  that the query filters on, and a value for the query to filter that field on. 
-    returns a list of counts for each answer in the target field (in the order the answers
-    were supplied in the tuple)'''
+    returns a dict of the answers as key and count as value)'''
     
     conn = s.connect("../telegraph.db")
     conn.text_factory = str
     cur = conn.cursor()
 
-    returnList = []
+    returnDict = {}
     for item in targetAnswers:
         data = (filterValue, item)
         #technically I know it's not "safe" to build SQL queries this way but b/c it's a SELECT and we are supplying the data I think it's ok
         SQL = "SELECT COUNT(" + targetField + ") from r WHERE " + filterField + " " + operator + " ? AND " + targetField + " = ?;" #gets count of each answer in the target field
         cur.execute(SQL, data)
-        returnList.append((cur.fetchone()[0])) #appends count to the list
+        returnDict[item] = cur.fetchone()[0] #appends count to the list
     
     cur.close()
     conn.close()
 
-    return returnList
+    return returnDict
 
     
 # PANE 1: Is current config good for <mode of transit>, plus high and low priority modes for improvement
@@ -48,37 +47,42 @@ def answerCount(targetAnswers, targetField, filterField, operator, filterValue):
 #   [hiPri ped counts, hiPri bike count, hiPri car count, hiPri transit count], [another list same as hiPri but loPri]]
 
 #this will become the Pane 1 routing function
-def makePane1():
+#wanted output format: 
+# currentlySuitsData = {"car": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25},
+# 					"bike": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25,},
+# 					"transit": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25}}
+def makePane1(filterValue):
 
-    graphData = []
+    pane1 = []
     filterField = "Mode1"
-    filterValue = "%Biking%" # this will be pulled in from filter post request. NOTE THAT WE WILL HAVE TO WRAP OUR FILTER PARAMETER IN THE %S!!
     operator = "LIKE"
     #for "Does current config work?" question
     configAnswers = ("Strongly Agree", "Agree", "No Opinion", "Disagree", "Strongly Disagree", "") 
     configTargets = ("GoodPeds", "GoodBikes", "GoodCars", "GoodTransit")
-    configuration= []
+    configuration= {}
     for item in configTargets:
-        configuration.append(answerCount(configAnswers, item, filterField, operator, filterValue))
+        configuration[item] = (answerCount(configAnswers, item, filterField, operator, filterValue))
 #     print(configuration)
-    graphData.append(configuration)
+    pane1.append(configuration)
 
     #for the highest priority improvements chart
     priorityAnswers = ("Biking", "Driving", "Transit", "Walking")
     hiPri = answerCount(priorityAnswers, "Improve1", filterField, operator, filterValue)
     #print(hiPri)
-    graphData.append(hiPri)
+    pane1.append(hiPri)
     #print(graphData)
 
     #for the lowest priority improvements chart
     loPri = answerCount(priorityAnswers, "Improve4", filterField, operator, filterValue)
     #print(loPri)
-    graphData.append(loPri)
-    #print(graphData)
+    pane1.append(loPri)
+    #print(pane1)
     
-    return graphData #this needs to be edited to hand off to front end properly
+    return pane1
 
-# print(makePane1())
+filterValue = "%Biking%" # this will be pulled in from filter post request. NOTE THAT WE WILL HAVE TO WRAP OUR FILTER PARAMETER IN THE %S!!
+#print(makePane1(filterValue))
+
 
 #PANE 2: showing random comments 
 # What people said (not from same person):
@@ -158,7 +162,7 @@ def getLocation():
     cur = conn.cursor()
     
     #gets count for responses in these three cities
-    cities = ["Oakland", "Berkeley"]
+    cities = ["Oakland", "Berkeley", "San Francisco"]
     for city in cities:
         SQL = 'SELECT COUNT(ResponseID) from r LEFT JOIN zips on r.HomeZIP = zips.Zip WHERE zips.City = ?;'
         data = (city,)    
@@ -166,15 +170,13 @@ def getLocation():
         location[city] = cur.fetchone()[0]
     
     #gets count for these counties EXCLUDING the cities already counted 
-    counties = ["Marin", "San Mateo", "Santa Clara", "Alameda", "Contra Costa", "San Francisco"]
+    counties = ["Marin", "San Mateo", "Santa Clara", "Alameda", "Contra Costa"]
     for county in counties:
         SQL = '''SELECT COUNT(ResponseID) from r LEFT JOIN zips on r.HomeZIP = zips.Zip 
         WHERE zips.County = ? AND zips.City NOT IN ("Oakland", "Berkeley");'''
         data = (county,)
         cur.execute(SQL, data)
-        location[county] = cur.fetchone()[0]
-        if location[county] == 0:
-            del location[county]
+        location[county + " County"] = cur.fetchone()[0]
     
     #gets count for other CA (all CA zips excluding those already counted)
     #NOTE THIS COUNT IS 0, JUST LIKE MARIN COUNTY, BUT DID NOT WANT TO DELETE (YET) 
@@ -194,6 +196,14 @@ def getLocation():
      zips.City IS NULL OR r.HomeZIP NOT IN ''' + dataStr + ';'
     cur.execute(SQL)
     location["Other"] = cur.fetchone()[0]
+    
+    #delete any location category with a 0 response count
+    toDelete = [] #have to make a list of things to delete, otherwise Runtime Error: dictionary changed size during iteration
+    for key, value in location.iteritems():
+        if value == 0:
+            toDelete.append(key)
+    for item in toDelete:
+        del location[item]
 
     cur.close()
     conn.close()
@@ -209,28 +219,24 @@ def getMode(priority):
     conn.text_factory = str
     cur = conn.cursor()
     
-    mode = []
+    mode = {}
     modes = ("%ACT%", "%BART%", "%Biking%", "%Driving%", "%Walking%", "%Other%", "")
     for item in modes:
         SQL = "SELECT COUNT(" + priority + ") from r WHERE " + priority + " LIKE ?;"
         data = (item,)
         cur.execute(SQL, data)
-        mode.append(cur.fetchone()[0])
+        mode[item] = cur.fetchone()[0]
         
     cur.close()
     conn.close()
     
     #add BART and ACT counts together to make one transit count
-    ACT = mode.pop(0)
-    #ACT is now gone so BART is mode[0]
-    BART = mode[0]
-    #replace BART with sum of both
-    mode[0] = ACT + BART
+    transitTotal = mode["%ACT%"] + mode["%BART%"]
+    mode["Transit"] = transitTotal
 
     return mode
-    #NOTE THAT THE ORDER OF THE LIST RETURNED: transit, bike, drive, walk, other
     
-# print(getMode("Mode1"))
+print(getMode("Mode1"))
 # print(getMode("Mode6")) 
 
 #3d: venn diagram for connection to telegraph ave
@@ -324,7 +330,9 @@ def makeVenn(setParams):
     return vennData
 
 tgraphConnection = [["Resident", "Yes"], ["Business", "Yes"], ["Work", "Yes"], ["Visit", "Yes"], ["Commute", "Yes"]]
-print(makeVenn(tgraphConnection))
+#print(makeVenn(tgraphConnection))
+
+#print(getFrequency())
     
     
 
