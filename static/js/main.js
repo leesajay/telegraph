@@ -17,6 +17,7 @@ function drawBarGraph(element, data){
 	var w = 500;
 	var h = 500;
 	var barPadding = 5;
+	var margins = [right: 20, left: 40, top: 40, bottom: 30]
 
 	//set up some stuff for the axis
 	var formatPercent = d3.format(".0%");
@@ -39,8 +40,11 @@ function drawBarGraph(element, data){
 		.html(function(d, i) {
 			return "<strong>" + titles[i] + "</strong> <span style='color:red'>" + dataset[i] + "</span>";
 		});
-	var svg = element.append("svg").attr("width", w)
-		.attr("height", h+20);
+	//make the svg element
+	var svg = element.append("svg").attr("width", w + margin.left + margin.right)
+		.attr("height", h + margin.top + margin.bottom)
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	//I actually don't know what this does
 	svg.call(tip);
 
 	//fit the axes to the range of our data
