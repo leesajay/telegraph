@@ -17,8 +17,15 @@ function drawBarGraph(element, data){
 	var w = 300;
 	var h = 100;
 	var barPadding = 5;
+	var tip = d3.tip()
+		.attr('class', 'd3-tip')
+		.offset([-10, 0])
+		.html(function(d) {
+			return "<strong>Frequency:</strong> <span style='color:red'>" + d.frequency + "</span>";
+		});
 	var svg = element.append("svg").attr("width", w)
 		.attr("height", h+20);
+	svg.call(tip);
 	var bar = svg.selectAll("g").data(dataset).enter().append("g");
 	bar.append("rect").attr("x", function(d, i){
 			return i*(w/dataset.length);
@@ -30,7 +37,9 @@ function drawBarGraph(element, data){
 		.attr("width", w/dataset.length-barPadding)
 		.attr("height", function(d){
 			return d;
-		});
+		})
+		.on('mouseover', tip.show)
+		.on('mouseout', tip.hide);
 	bar.append("text")
 		.attr("x", function(d, i) { return i*(w/dataset.length); })
 		.attr("y", function(d) { return h+5;})
@@ -154,14 +163,14 @@ function connectionToTele(){
 	// draw the diagram
 	var diagram = venn.drawD3Diagram(d3.select("#connectionToTele"), sets, 300, 300);
 
-	// add the tooltip to the diagram
-	var tip = d3.tip().attr("class", "d3-tip").html(
-		function (d,i) { return "Size=" + d['size'];});
+	// add the tooltip to the diagram NOTE killing for now
+//	var tip = d3.tip().attr("class", "d3-tip").html(
+//		function (d,i) { return "Size=" + d['size'];});
 
-	diagram.svg.call(tip);
-	diagram.text.style('cursor', 'default')
-		.on('mouseover', tip.show)
-		.on('mouseout', tip.hide);
+//	diagram.svg.call(tip);
+//	diagram.text.style('cursor', 'default')
+//		.on('mouseover', tip.show)
+//		.on('mouseout', tip.hide);
 }
 //-----------------------------------------------------------------------------
 //main
