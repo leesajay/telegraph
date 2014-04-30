@@ -17,7 +17,7 @@ function drawBarGraph(element, data){
 	var w = 500;
 	var h = 500;
 	var barPadding = 5;
-	var margins = {right: 20, left: 40, top: 40, bottom: 30};
+	var margin = {right: 20, left: 40, top: 40, bottom: 30};
 
 	//set up some stuff for the axis
 	var formatPercent = d3.format(".0%");
