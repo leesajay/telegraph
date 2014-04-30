@@ -259,8 +259,10 @@ def makeVenn(setParams):
 #insert everything here
 def welcome():
     app.logger.debug("welcome function called")
-    
-    pane1 = makePane1(filtervalue) #the filterValue param is passed from the front-end form and needs to be wrapped in %, e.g., %Biking%
+    #this param is a test value to prevent errors
+    #what will go in here when we are ready is filterValue param
+    #which  is passed from the front-end form and needs to be wrapped in %
+    pane1 = makePane1("%Biking%") 
     textData = makePane2()
     frequency = getFrequency()
     location = getLocation()
