@@ -6,9 +6,9 @@ function drawBarGraph(element, data){
 	//redraw if it already exists
 	//TODO ticks, tooltips
 
+	//split up the data into titles and values
 	var dataset = [];
 	var titles = [];
-
 	for(var key in data){
 		dataset.push(data[key]);
 		titles.push(key);
@@ -17,6 +17,22 @@ function drawBarGraph(element, data){
 	var w = 300;
 	var h = 100;
 	var barPadding = 5;
+
+	//set up some stuff for the axis
+	var formatPercent = d3.format(".0%");
+	var x = d3.scale.ordinal()
+		.rangeRoundBands([0, w], .1);
+	var y = d3.scale.linear()
+		.range([h, 0]);
+	var xAxis = d3.svg.axis()
+		.scale(x)
+		.orient("bottom");
+	var yAxis = d3.svg.axis()
+		.scale(y)
+		.orient("left")
+		.tickFormat(formatPercent);
+
+	//set up the tooltips
 	var tip = d3.tip()
 		.attr('class', 'd3-tip')
 		.offset([-10, 0])
@@ -26,7 +42,29 @@ function drawBarGraph(element, data){
 	var svg = element.append("svg").attr("width", w)
 		.attr("height", h+20);
 	svg.call(tip);
+
+	//fit the axes to the range of our data
+	x.domain(data.map(function(d, i) { return titles[i]; }));
+	y.domain([0, d3.max(data, function(d, i) { return dataset[i]; })]);
+
+	//put the axes on
+	svg.append("g")
+		.attr("class", "x axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(xAxis);
+	svg.append("g")
+		.attr("class", "y axis")
+		.call(yAxis)
+		.append("text")
+			.attr("transform", "rotate(-90)")
+			.attr("y", 6)
+			.attr("dy", ".71em")
+			.style("text-anchor", "end")
+			.text("");
+
+	//make the bar containers
 	var bar = svg.selectAll("g").data(dataset).enter().append("g");
+	//make the actual bars
 	bar.append("rect").attr("x", function(d, i){
 			return i*(w/dataset.length);
 		})
@@ -40,11 +78,12 @@ function drawBarGraph(element, data){
 		})
 		.on('mouseover', tip.show)
 		.on('mouseout', tip.hide);
-	bar.append("text")
-		.attr("x", function(d, i) { return i*(w/dataset.length); })
-		.attr("y", function(d) { return h+5;})
-		.attr("dy", ".35em")
-		.text(function(d, i) {return titles[i]});
+	//make the text
+//	bar.append("text")
+//		.attr("x", function(d, i) { return i*(w/dataset.length); })
+//		.attr("y", function(d) { return h+5;})
+//		.attr("dy", ".35em")
+//		.text(function(d, i) {return titles[i]});
 }
 //-----------------------------------------------------------------------------
 
