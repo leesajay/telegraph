@@ -20,8 +20,8 @@ function drawBarGraph(element, data){
 	var tip = d3.tip()
 		.attr('class', 'd3-tip')
 		.offset([-10, 0])
-		.html(function(d) {
-			return "<strong>Frequency:</strong> <span style='color:red'>" + d.frequency + "</span>";
+		.html(function(d, i) {
+			return "<strong>" + titles[i] + "</strong> <span style='color:red'>" + dataset[i] + "</span>";
 		});
 	var svg = element.append("svg").attr("width", w)
 		.attr("height", h+20);
