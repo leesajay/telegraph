@@ -44,7 +44,7 @@ function currentlySuits(){
 	var data = {"car": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25},
 		"bike": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25,},
 		"transit": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25}};
-	var element = document.getElementById("currentlySuits");
+	var element = d3.select("#currentlySuits");
 	//TODO likert viz
 	
 }
@@ -53,7 +53,7 @@ function highestPriority(){
 	//bar graph of highes priority
 	//var data = {{highestPriorityData}};
 	var data = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80};
-	var element = document.getElementById("highestPriority");
+	var element = d3.select("#highestPriority");
 	drawBarGraph(element, data);
 }
 
@@ -61,7 +61,7 @@ function lowestPriority(){
 	//bar graph of lowest priority
 	//var data = {{lowestPriorityData}};
 	var data = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80};
-	var element = document.getElementById("lowestPriority");
+	var element = d3.select("#lowestPriority");
 	drawBarGraph(element, data);
 }
 
@@ -94,21 +94,21 @@ function loveQuote(){
 	//display the quote passed by python
 	//var data = {{loveQuoteData}};
 	var data = "I sure do love that one thing";
-	document.getElementById("loveQuote").innerHTML = data;
+	d3.select("#loveQuote").append("p").text(data);
 }
 
 function hateQuote(){
 	//display the quote passed by python
 	//var data = {{hateQuoteData}};
 	var data = "I'm not too fond of that other thing";
-	document.getElementById("hateQuote").innerHTML = data;
+	d3.select("#hateQuote").append("p").text(data);
 }
 
 function randomQuote(){
 	//display the quote passed by python
 	//var data = {{randomQuoteData}};
 	var data = "It would be great if you'd do this third thing";
-	document.getElementById("randomQuote").innerHTML = data;
+	d3.select("#randomQuote").append("p").text(data);
 }
 
 //-----------------------------------------------------------------------------
@@ -119,7 +119,7 @@ function useFrequency(){
 	//bar chart of use frequency
 	//var data = {{useFrequencyData}};
 	var data = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80};
-	var element = document.getElementById("useFrequency");
+	var element = d3.select("#useFrequency");
 	drawBarGraph(element, data);
 }
 
@@ -127,7 +127,7 @@ function home(){
 	//bar chart of home location
 	//var data = {{homeData}};
 	var data = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80};
-	var element = document.getElementById("home");
+	var element = d3.select("#home");
 	drawBarGraph(element, data);
 }
 
@@ -135,7 +135,7 @@ function primaryTransit(){
 	//bar chart of primary transit
 	//var data = {{primaryTransitData}};
 	var data = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80};
-	var element = document.getElementById("primaryTransit");
+	var element = d3.select("#primaryTransit");
 	drawBarGraph(element, data);
 }
 
@@ -151,7 +151,7 @@ function connectionToTele(){
 	sets = venn.venn(sets, overlaps);
 
 	// draw the diagram
-	var diagram = venn.drawD3Diagram(d3.select("connectionToTele"), sets, 300, 300);
+	var diagram = venn.drawD3Diagram(d3.select("#connectionToTele"), sets, 300, 300);
 
 	// add the tooltip to the diagram
 	var tip = d3.tip().attr("class", "d3-tip").html(
