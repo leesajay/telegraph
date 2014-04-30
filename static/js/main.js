@@ -165,7 +165,7 @@ function connectionToTele(){
 //-----------------------------------------------------------------------------
 //main
 //-----------------------------------------------------------------------------
-currentlySuite();
+currentlySuits();
 highestPriority();
 lowestPriority();
 loveQuote();
