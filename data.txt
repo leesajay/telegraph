@@ -24,6 +24,8 @@ homeData = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80}
 
 primaryTransitData = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80}
 
+leastUsedTransitData = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80}
+
 connectionToTeleData = [
 						{"sets": [{label: "Live", size: 10}, {label: "Work", size: 10}, {label: "Commute", size: 72}]},
 						{"overlaps": [{sets: [0,1,2], size: 2}, {sets: [0, 2], size: 3}]}
