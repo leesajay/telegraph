@@ -14,12 +14,11 @@ function drawBarGraph(element, data){
 		titles.push(key);
 	}
 
-	var margin = {right: 20, left: 40, top: 40, bottom: 30};
-	var width = 350 - margin.left - margin.right;
-	var height = 350 - margin.top - margin.bottom;
+	var margin = {top: 20, right: 0, bottom: 20, left: 0},
+		width = 350 - margin.left - margin.right,
+		height = 300 - margin.top - margin.bottom;
 
 	//set up some stuff for the axis
-	var formatPercent = d3.format(".0%");
 	var x = d3.scale.ordinal()
 		.rangeRoundBands([0, width], .1);
 	var y = d3.scale.linear()
@@ -29,8 +28,7 @@ function drawBarGraph(element, data){
 		.orient("bottom");
 	var yAxis = d3.svg.axis()
 		.scale(y)
-		.orient("left")
-		.tickFormat(formatPercent);
+		.orient("left");
 
 	//set up the tooltips
 	var tip = d3.tip()
@@ -40,31 +38,40 @@ function drawBarGraph(element, data){
 			return "<strong>" + titles[i] + "</strong> <span style='color:red'>" + dataset[i] + "</span>";
 		});
 	//make the svg element
-	var svg = element.append("svg").attr("width", width + margin.left + margin.right)
+	var svg = element.append("svg")
+		.attr("width", width + margin.left + margin.right)
 		.attr("height", height + margin.top + margin.bottom)
 		.append("g")
 			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 	//I actually don't know what this does
 	svg.call(tip);
 
-	//fit the axes to the range of our data
-	x.domain(titles);
-	y.domain([0, d3.max(dataset)]);
+	//fit the axes to the range of our data TODO is this necessary
+	//x.domain(titles);
+	//y.domain([0, d3.max(dataset)]);
 
-	//put the axes on
+
 	svg.append("g")
 		.attr("class", "x axis")
 		.attr("transform", "translate(0," + height + ")")
 		.call(xAxis);
-	svg.append("g")
+
+	var gy = svg.append("g")
 		.attr("class", "y axis")
-		.call(yAxis)
-		.append("text")
-			.attr("transform", "rotate(-90)")
-			.attr("y", 6)
-			.attr("dy", ".71em")
-			.style("text-anchor", "end")
-			.text("Respondents");
+		.call(yAxis);
+	//	.append("text")
+	//		.attr("transform", "rotate(-90)")
+	//		.attr("y", 6)
+	//		.attr("dy", ".71em")
+	//		.style("text-anchor", "end")
+	//		.text("Respondents");
+
+	gy.selectAll("g").filter(function(d) { return d; })
+		.classed("minor", true);
+
+	gy.selectAll("text")
+		.attr("x", 4)
+		.attr("dy", -4);
 
 	//make the bars
 	svg.selectAll(".bar")
