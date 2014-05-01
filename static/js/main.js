@@ -106,7 +106,7 @@ function currentlySuits(){
 		.scale(x)
 		.orient("top");
 
-	var svg = d3.select("body").append("svg")
+	var svg = element.append("svg")
 		.attr("width", width + margin.left + margin.right)
 		.attr("height", height + margin.top + margin.bottom)
 		.append("g")
@@ -114,7 +114,7 @@ function currentlySuits(){
 
 	//TODO
 	x.domain(d3.extent(testData)).nice();
-	y.domain(data.map(testNames));
+	y.domain(testNames);
 
 	svg.selectAll(".bar")
 		.data(testData)
