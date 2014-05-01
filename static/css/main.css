@@ -2,6 +2,10 @@ svg {
 	font: 10px sans-serif;
 }
 
+body {
+	font-family: sans-serif;
+}
+
 .axis path,
 .axis line {
 	fill: none;

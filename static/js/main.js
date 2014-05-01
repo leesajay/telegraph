@@ -14,7 +14,7 @@ function drawBarGraph(element, data){
 		titles.push(key);
 	}
 
-	var margin = {top: 20, right: 0, bottom: 20, left: 10},
+	var margin = {top: 20, right: 0, bottom: 20, left: 15},
 		width = 350 - margin.left - margin.right,
 		height = 300 - margin.top - margin.bottom;
 
@@ -64,7 +64,7 @@ function drawBarGraph(element, data){
 		.classed("minor", true);
 
 	gy.selectAll("text")
-		.attr("x", 4)
+		.attr("x", -6)
 		.attr("dy", -4);
 
 	//make the bars
