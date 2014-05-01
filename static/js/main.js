@@ -14,17 +14,16 @@ function drawBarGraph(element, data){
 		titles.push(key);
 	}
 
-	var w = 500;
-	var h = 500;
-	var barPadding = 5;
 	var margin = {right: 20, left: 40, top: 40, bottom: 30};
+	var width = 350 - margin.left - margin.right;
+	var height = 350 - margin.top - margin.bottom;
 
 	//set up some stuff for the axis
 	var formatPercent = d3.format(".0%");
 	var x = d3.scale.ordinal()
-		.rangeRoundBands([0, w], .1);
+		.rangeRoundBands([0, width], .1);
 	var y = d3.scale.linear()
-		.range([h, 0]);
+		.range([height, 0]);
 	var xAxis = d3.svg.axis()
 		.scale(x)
 		.orient("bottom");
@@ -41,9 +40,10 @@ function drawBarGraph(element, data){
 			return "<strong>" + titles[i] + "</strong> <span style='color:red'>" + dataset[i] + "</span>";
 		});
 	//make the svg element
-	var svg = element.append("svg").attr("width", w + margin.left + margin.right)
-		.attr("height", h + margin.top + margin.bottom)
-		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	var svg = element.append("svg").attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+		.append("g")
+			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 	//I actually don't know what this does
 	svg.call(tip);
 
@@ -54,7 +54,7 @@ function drawBarGraph(element, data){
 	//put the axes on
 	svg.append("g")
 		.attr("class", "x axis")
-		.attr("transform", "translate(0," + h + ")")
+		.attr("transform", "translate(0," + height + ")")
 		.call(xAxis);
 	svg.append("g")
 		.attr("class", "y axis")
@@ -68,13 +68,13 @@ function drawBarGraph(element, data){
 
 	//make the bars
 	svg.selectAll(".bar")
-		.data(data)
+		.data(dataset)
 		.enter().append("rect")
 			.attr("class", "bar")
-			.attr("x", function(d, i) { return titles[i]; })
+			.attr("x", function(d, i) { return x(titles[i]); })
 			.attr("width", x.rangeBand())
-			.attr("y", function(d, i) { return y(dataset[i]); })
-			.attr("height", function(d, i) { return h - y(dataset[i]); })
+			.attr("y", function(d) { return y(d); })
+			.attr("height", function(d, i) { return height - y(dataset[i]); })
 		.on('mouseover', tip.show)
 		.on('mouseout', tip.hide)
 }
