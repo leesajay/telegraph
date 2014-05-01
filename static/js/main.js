@@ -194,16 +194,7 @@ function connectionToTele(){
 	sets = venn.venn(sets, overlaps);
 
 	// draw the diagram
-	var diagram = venn.drawD3Diagram(d3.select("#connectionToTele"), sets, 300, 300);
-
-	// add the tooltip to the diagram NOTE killing for now
-//	var tip = d3.tip().attr("class", "d3-tip").html(
-//		function (d,i) { return "Size=" + d['size'];});
-
-//	diagram.svg.call(tip);
-//	diagram.text.style('cursor', 'default')
-//		.on('mouseover', tip.show)
-//		.on('mouseout', tip.hide);
+	var diagram = venn.drawD3Diagram(d3.select("#connectionToTele"), sets, 300, 300, {opacity: 0.9});
 }
 //-----------------------------------------------------------------------------
 //main
