@@ -14,7 +14,7 @@ function drawBarGraph(element, data){
 		titles.push(key);
 	}
 
-	var margin = {top: 20, right: 0, bottom: 20, left: 0},
+	var margin = {top: 20, right: 0, bottom: 20, left: 10},
 		width = 350 - margin.left - margin.right,
 		height = 300 - margin.top - margin.bottom;
 
@@ -28,7 +28,8 @@ function drawBarGraph(element, data){
 		.orient("bottom");
 	var yAxis = d3.svg.axis()
 		.scale(y)
-		.orient("left");
+		.tickSize(width)
+		.orient("right");
 
 	//set up the tooltips
 	var tip = d3.tip()
@@ -47,9 +48,8 @@ function drawBarGraph(element, data){
 	svg.call(tip);
 
 	//fit the axes to the range of our data TODO is this necessary
-	//x.domain(titles);
-	//y.domain([0, d3.max(dataset)]);
-
+	x.domain(titles);
+	y.domain([0, d3.max(dataset)]);
 
 	svg.append("g")
 		.attr("class", "x axis")
@@ -59,12 +59,6 @@ function drawBarGraph(element, data){
 	var gy = svg.append("g")
 		.attr("class", "y axis")
 		.call(yAxis);
-	//	.append("text")
-	//		.attr("transform", "rotate(-90)")
-	//		.attr("y", 6)
-	//		.attr("dy", ".71em")
-	//		.style("text-anchor", "end")
-	//		.text("Respondents");
 
 	gy.selectAll("g").filter(function(d) { return d; })
 		.classed("minor", true);
@@ -81,7 +75,7 @@ function drawBarGraph(element, data){
 			.attr("x", function(d, i) { return x(titles[i]); })
 			.attr("width", x.rangeBand())
 			.attr("y", function(d) { return y(d); })
-			.attr("height", function(d, i) { return height - y(dataset[i]); })
+			.attr("height", function(d) { return height - y(d); })
 		.on('mouseover', tip.show)
 		.on('mouseout', tip.hide)
 }
