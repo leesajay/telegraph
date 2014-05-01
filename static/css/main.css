@@ -6,7 +6,13 @@ body {
 	font-family: sans-serif;
 }
 
-circle:hover {
+.vennCircle {
+	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=50);
+	-moz-opacity: .5;
+	opacity: .5;
+}
+
+.vennCircle:hover {
 	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=100);
 	-moz-opacity: 1;
 	opacity: 1;

@@ -498,7 +498,8 @@
                .attr("cy", function(d) { return d.y; })
                .style("stroke", function(d, i) { return circleStrokeColours(i); })
                .style("stroke-width", function(d, i) { return circleStrokeWidth(i); })
-               .style("fill", function(d, i) { return circleFillColours(i); });
+               .style("fill", function(d, i) { return circleFillColours(i); })
+               .attr("class", "vennCircle");
 
         var text = nodes.append("text")
                .attr("x", function(d) { return d.x; })
