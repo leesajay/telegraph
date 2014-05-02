@@ -86,7 +86,7 @@ def getRandom(targetField):
     candidate = cur.fetchone()[0]
     #I have tried many combos of different Booleans to exclude both None and '' and I can never get them both
     # excluded and I don't know why!!
-    if not candidate != None and candidate != "": 
+    if candidate != None and candidate != "": 
         cur.close()
         conn.close()
         return candidate
@@ -335,5 +335,5 @@ def welcome():
 app.secret_key = os.urandom(24)
 
 if __name__ == "__main__":
-	app.run(port=61008)
-	#app.run() #for local testing	
+	#app.run(port=61008)
+	app.run() #for local testing	
