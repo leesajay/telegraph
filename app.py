@@ -140,7 +140,11 @@ def getLocation():
         WHERE zips.County = ? AND zips.City NOT IN ("Oakland", "Berkeley");'''
         data = (county,)
         cur.execute(SQL, data)
-        location[county + " County"] = cur.fetchone()[0]
+        count = cur.fetchone()[0]
+        if county == "Alameda":
+            location["Other Alameda County"] = count
+        else:
+            location[county + " County"] = count
     
     #gets count for other CA (all CA zips excluding those already counted)
     #NOTE THIS COUNT IS 0, JUST LIKE MARIN COUNTY, BUT DID NOT WANT TO DELETE (YET) 
@@ -306,16 +310,16 @@ def welcome():
     leastUsedTransitData = getMode("Mode6")
     tgraphConnection = [["Resident", "Yes"], ["Business", "Yes"], ["Work", "Yes"], ["Visit", "Yes"], ["Commute", "Yes"]]
     vennData = (makeVenn(tgraphConnection))
-    app.logger.debug("PANE 1 DATA")
-    app.logger.debug(pane1)
+    #app.logger.debug("PANE 1 DATA")
+    #app.logger.debug(pane1)
     app.logger.debug("PANE 2 DATA")
     app.logger.debug(textData)
     app.logger.debug("PANE 3 DATA")
-    app.logger.debug(frequency)
+    #app.logger.debug(frequency)
     app.logger.debug(location)
-    app.logger.debug(primaryTransitData)
-    app.logger.debug(leastUsedTransitData)
-    app.logger.debug(vennData)
+    #app.logger.debug(primaryTransitData)
+    #app.logger.debug(leastUsedTransitData)
+    #app.logger.debug(vennData)
 
     #variable syntax for render params is nameInTemplate = nameInApp.py
     return flask.render_template("index.html", 
@@ -336,4 +340,3 @@ app.secret_key = os.urandom(24)
 
 if __name__ == "__main__":
 	app.run(port=61008)
-	#app.run() #for local testing	
