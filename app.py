@@ -335,5 +335,5 @@ def welcome():
 app.secret_key = os.urandom(24)
 
 if __name__ == "__main__":
-	#app.run(port=61008)
-	app.run() #for local testing	
+	app.run(port=61008)
+	#app.run() #for local testing	
