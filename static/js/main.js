@@ -122,7 +122,7 @@ function currentlySuits(){
 		.attr('class', 'd3-tip')
 		.offset([-10, 0])
 		.html(function(d, i) {
-			return "<strong>" + cats[i] + "</strong> <span style='color:red'>" + data[i%5].values[i-(5*(i%5))] + "</span>";
+			return "<strong>" + cats[i] + "</strong> <span style='color:red'>" + data[Math.floor(1/5)].values[i%5] + "</span>";
 		});
 
 	var margin = {top: 40, right: 10, bottom: 20, left: 50},
