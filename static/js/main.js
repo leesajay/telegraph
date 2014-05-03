@@ -118,16 +118,16 @@ function currentlySuits(){
 	var yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
 
 	//set up the tooltips TODO
-	var tip = d3.tip()
-		.attr('class', 'd3-tip')
-		.offset([-10, 0])
-		.html(function(d, i) {
-			return "<strong>" + cats[i] + "</strong> <span style='color:red'>" + data[Math.floor(1/5)].values[i%5] + "</span>";
-		});
+//	var tip = d3.tip()
+//		.attr('class', 'd3-tip')
+//		.offset([-10, 0])
+//		.html(function(d, i) {
+//			return "<strong>" + cats[i] + "</strong> <span style='color:red'>" + data[Math.floor(1/5)].values[i%5] + "</span>";
+//		});
 
-	var margin = {top: 40, right: 10, bottom: 20, left: 50},
-		width = 677 - margin.left - margin.right,
-		height = 733 - margin.top - margin.bottom;
+	var margin = {top: 40, right: 60, bottom: 20, left: 40},
+		width = 777 - margin.left - margin.right,
+		height = 373 - margin.top - margin.bottom;
 
 	var y = d3.scale.ordinal()
 		.domain(d3.range(m))
@@ -144,7 +144,7 @@ function currentlySuits(){
 		.attr("height", height + margin.top + margin.bottom)
 		.append("g")
 			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-	svg.call(tip);
+//	svg.call(tip);
 
 	var layer = svg.selectAll(".layer")
 		.data(layers)
@@ -161,9 +161,9 @@ function currentlySuits(){
 		.attr("x", function(d) { return x(d.y0); })
 		.attr("height", y.rangeBand())
 		.attr("width", function(d) { return x(d.y); })
-		.attr("class", "likertBar")
-		.on('mouseover', tip.show)
-		.on('mouseout', tip.hide);
+		.attr("class", "likertBar");
+	//	.on('mouseover', tip.show)
+	//	.on('mouseout', tip.hide);
 
 	bar.append("text")
 		.attr("x", function(d) { return x(d.y0) + 5; })
@@ -174,31 +174,40 @@ function currentlySuits(){
 		.text(function(d) { return d.y; });
 
 	// Draw legend
-	var legend = svg.selectAll(".legend")
-		.data(color)
-		.enter().append("g")
+	var legend = svg.append("g")
 		.attr("class", "legend")
-		.attr("transform", function(d, i) { return "translate(30," + i * 19 + ")"; });
- 
-	legend.append("rect")
-		.attr("x", width - 18)
-		.attr("width", 18)
-		.attr("height", 18)
-		.style("fill", function(d, i) {return color.slice().reverse()[i];});
- 
-	legend.append("text")
-		.attr("x", width + 5)
-		.attr("y", 9)
-		.attr("dy", ".35em")
-		.style("text-anchor", "start")
-		.text(function(d, i) { 
-			switch (i) {
-				case 0: return "Strongly Disagree";
-				case 1: return "Disagree";
-				case 2: return "Neutral/No Response";
-				case 3: return "Agree";
-				case 4: return "Strongly Agree";
-			}
+		.attr("height", 100)
+		.attr("width", 100)
+		.attr('transform', 'translate(-20,50)');
+
+	var legendRect = legend.selectAll('rect').data(color);
+
+	legendRect.enter()
+		.append("rect")
+		.attr("x", width - 30)
+		.attr("width", 10)
+		.attr("height", 10);
+
+	legendRect
+		.attr("y", function(d, i) {
+			return i * 20;
+		})
+		.style("fill", function(d) {
+			return d;
+		});
+
+	var legendText = legend.selectAll('text').data(cats);
+
+	legendText.enter()
+		.append("text")
+		.attr("x", width - 10);
+
+	legendText
+		.attr("y", function(d, i) {
+			return i * 20 + 9;
+		})
+		.text(function(d) {
+			return d;
 		});
  
 }//function
