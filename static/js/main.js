@@ -76,7 +76,7 @@ function drawBarGraph(element, data){
 			.attr("y", function(d) { return y(d); })
 			.attr("height", function(d) { return height - y(d); })
 		.on('mouseover', tip.show)
-		.on('mouseout', tip.hide)
+		.on('mouseout', tip.hide);
 }
 //-----------------------------------------------------------------------------
 
@@ -87,8 +87,9 @@ function currentlySuits(){
 	//	"bike": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25,},
 	//	"transit": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25}};
 	var element = d3.select("#currentlySuits");
-	//TODO likert viz
+	//TODO lables, tooltips, legend
 
+	var cats = ["Strongly Disagree", "Disagree", "Neutal/No Answer", "Agree", "Strongly Agree"];
 	var data = [
 		{key:"Pedestrians", values:[25, 62, 22, 37, 41]},
 		{key:"Cars", values:[36, 52, 36, 22, 61]},
@@ -116,6 +117,14 @@ function currentlySuits(){
 	//the largest stack
 	var yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
 
+	//set up the tooltips TODO
+	var tip = d3.tip()
+		.attr('class', 'd3-tip')
+		.offset([-10, 0])
+		.html(function(d, i) {
+			return "<strong>" + cats[i] + "</strong> <span style='color:red'>" + data[i%5].values[i-(5*(i%5))] + "</span>";
+		});
+
 	var margin = {top: 40, right: 10, bottom: 20, left: 50},
 		width = 677 - margin.left - margin.right,
 		height = 533 - margin.top - margin.bottom;
@@ -135,6 +144,7 @@ function currentlySuits(){
 		.attr("height", height + margin.top + margin.bottom)
 		.append("g")
 			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	svg.call(tip);
 
 	var layer = svg.selectAll(".layer")
 		.data(layers)
@@ -151,7 +161,9 @@ function currentlySuits(){
 		.attr("x", function(d) { return x(d.y0); })
 		.attr("height", y.rangeBand())
 		.attr("width", function(d) { return x(d.y); })
-		.attr("class", "likertBar");
+		.attr("class", "likertBar")
+		.on('mouseover', tip.show)
+		.on('mouseout', tip.hide);
 
 	bar.append("text")
 		.attr("x", function(d) { return x(d.y0) + 5; })
@@ -160,7 +172,6 @@ function currentlySuits(){
 		.attr("font-family", "sans-serif")
 		.attr("fill", "black")
 		.text(function(d) { return d.y; });
-
 }
 
 function highestPriority(){
