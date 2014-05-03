@@ -47,7 +47,14 @@ def makePane1(filterValue):
     configTargets = ("GoodPeds", "GoodBikes", "GoodCars", "GoodTransit")
     configuration= {}
     for item in configTargets:
-        configuration[item] = (answerCount(configAnswers, item, filterField, operator, filterValue))
+        if item == "GoodPeds":
+            configuration["Pedestrians"] = (answerCount(configAnswers, item, filterField, operator, filterValue))
+        if item == "GoodBikes":
+            configuration["Bicyclists"] = (answerCount(configAnswers, item, filterField, operator, filterValue))
+        if item == "GoodCars":
+            configuration["Drivers"] = (answerCount(configAnswers, item, filterField, operator, filterValue))
+        if item == "GoodTransit":
+            configuration["Transit riders"] = (answerCount(configAnswers, item, filterField, operator, filterValue))
 #     print(configuration)
     pane1.append(configuration)
 
@@ -79,7 +86,7 @@ def getRandom(targetField):
     candidate = cur.fetchone()[0]
     #I have tried many combos of different Booleans to exclude both None and '' and I can never get them both
     # excluded and I don't know why!!
-    if not candidate == None: 
+    if candidate != None and candidate != "": 
         cur.close()
         conn.close()
         return candidate
@@ -93,7 +100,14 @@ def makePane2():
     textData.append(getRandom("Like"))
     textData.append(getRandom("WishDifferent"))
     randomIdea = random.choice(["IdeasCars", "IdeasTransit", "IdeaseBikes", "IdeasPeds"])
-    textData.append(randomIdea)
+    if randomIdea == "IdeasCars":
+        textData.append("To improve Telegraph for cars...")
+    if randomIdea == "IdeasTransit":
+        textData.append("To improve Telegraph for public transit...")
+    if randomIdea == "IdeaseBikes":
+        textData.append("To improve Telegraph for bikes...") 
+    if randomIdea == "IdeasPeds":
+        textData.append("To improve Telegraph for pedestrians...")
     textData.append(getRandom(randomIdea))
     return textData
 
@@ -126,7 +140,11 @@ def getLocation():
         WHERE zips.County = ? AND zips.City NOT IN ("Oakland", "Berkeley");'''
         data = (county,)
         cur.execute(SQL, data)
-        location[county + " County"] = cur.fetchone()[0]
+        count = cur.fetchone()[0]
+        if county == "Alameda":
+            location["Other Alameda County"] = count
+        else:
+            location[county + " County"] = count
     
     #gets count for other CA (all CA zips excluding those already counted)
     #NOTE THIS COUNT IS 0, JUST LIKE MARIN COUNTY, BUT DID NOT WANT TO DELETE (YET) 
@@ -173,7 +191,17 @@ def getMode(priority):
         SQL = "SELECT COUNT(" + priority + ") from r WHERE " + priority + " LIKE ?;"
         data = (item,)
         cur.execute(SQL, data)
-        mode[item] = cur.fetchone()[0]
+        count = cur.fetchone()[0]
+        if item == "%Biking%":
+            mode["Biking"] = count
+        elif item == "%Driving%":
+            mode["Driving"] = count
+        elif item == "%Walking%":
+            mode["Walking"] = count
+        elif item == "%Other%":
+            mode["Other"] = count
+        else:
+            mode[item] = count
         
     cur.close()
     conn.close()
@@ -181,6 +209,8 @@ def getMode(priority):
     #add BART and ACT counts together to make one transit count
     transitTotal = mode["%ACT%"] + mode["%BART%"]
     mode["Transit"] = transitTotal
+    del mode["%ACT%"]
+    del mode["%BART%"]
 
     return mode
     
@@ -207,7 +237,16 @@ def makeVenn(setParams):
         cur.execute(SQL, data)
         #make a dict entry in the format called for by the venn diagram library
         count = cur.fetchone()[0]
-        setItem = {"label": pair[0], "size": count}
+        if pair[0] == "Resident":
+            setItem = {"label": "Live in a nearby neighborhood, " + str(count), "size": count}
+        if pair[0] == "Business":
+            setItem = {"label": "Own a business on Telegraph, " + str(count), "size": count}
+        if pair[0] == "Work":
+            setItem = {"label": "Work on or near Telegraph, " + str(count), "size": count}
+        if pair[0] == "Visit":
+            setItem = {"label": "Visit the shops, restaurants, and other businesses on Telegraph, " + str(count), "size": count}
+        if pair[0] == "Commute":
+            setItem = {"label": "Commute via Telegraph, " + str(count), "size": count}
         sets.append(setItem)
         pair.append(setParams.index(pair))
     vennData.append(sets)    
@@ -271,6 +310,16 @@ def welcome():
     leastUsedTransitData = getMode("Mode6")
     tgraphConnection = [["Resident", "Yes"], ["Business", "Yes"], ["Work", "Yes"], ["Visit", "Yes"], ["Commute", "Yes"]]
     vennData = (makeVenn(tgraphConnection))
+    #app.logger.debug("PANE 1 DATA")
+    #app.logger.debug(pane1)
+    app.logger.debug("PANE 2 DATA")
+    app.logger.debug(textData)
+    app.logger.debug("PANE 3 DATA")
+    #app.logger.debug(frequency)
+    app.logger.debug(location)
+    #app.logger.debug(primaryTransitData)
+    #app.logger.debug(leastUsedTransitData)
+    #app.logger.debug(vennData)
 
     #variable syntax for render params is nameInTemplate = nameInApp.py
     return flask.render_template("index.html", 
@@ -290,4 +339,4 @@ def welcome():
 app.secret_key = os.urandom(24)
 
 if __name__ == "__main__":
-	app.run(port=61008)	
+	app.run(port=61008)
