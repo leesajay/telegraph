@@ -127,7 +127,7 @@ function currentlySuits(){
 
 	var margin = {top: 40, right: 10, bottom: 20, left: 50},
 		width = 677 - margin.left - margin.right,
-		height = 533 - margin.top - margin.bottom;
+		height = 733 - margin.top - margin.bottom;
 
 	var y = d3.scale.ordinal()
 		.domain(d3.range(m))
