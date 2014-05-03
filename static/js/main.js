@@ -172,7 +172,36 @@ function currentlySuits(){
 		.attr("font-family", "sans-serif")
 		.attr("fill", "black")
 		.text(function(d) { return d.y; });
-}
+
+	// Draw legend
+	var legend = svg.selectAll(".legend")
+		.data(color)
+		.enter().append("g")
+		.attr("class", "legend")
+		.attr("transform", function(d, i) { return "translate(30," + i * 19 + ")"; });
+ 
+	legend.append("rect")
+		.attr("x", width - 18)
+		.attr("width", 18)
+		.attr("height", 18)
+		.style("fill", function(d, i) {return colors.slice().reverse()[i];});
+ 
+	legend.append("text")
+		.attr("x", width + 5)
+		.attr("y", 9)
+		.attr("dy", ".35em")
+		.style("text-anchor", "start")
+		.text(function(d, i) { 
+			switch (i) {
+				case 0: return "Strongly Disagree";
+				case 1: return "Disagree";
+				case 2: return "Neutral/No Response";
+				case 3: return "Agree";
+				case 4: return "Strongly Agree";
+			}
+		});
+ 
+}//function
 
 function highestPriority(){
 	//bar graph of highes priority
