@@ -83,28 +83,52 @@ function drawBarGraph(element, data){
 function currentlySuits(){
 	//the likert scale viz
 	//var data = {{currentlySuitsData}};
-	var data = {"car": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25},
-		"bike": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25,},
-		"transit": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25}};
+	//var data = {"car": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25},
+	//	"bike": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25,},
+	//	"transit": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25}};
 	var element = d3.select("#currentlySuits");
 	//TODO likert viz
 
-	var testData = [5, -10, 36, -62, 69, -21];
-	var testNames = ["a", "b", "c", "d", "e", "f"];
+	var data = [
+		{key:"Pedestrians", values:[25, 62, 22, 37, 41]},
+		{key:"Cars", values:[36, 52, 36, 22, 61]},
+		{key:"Transit", values:[31, 52, 41, 62, 41]},
+		{key:"Bikes", values:[42, 26, 23, 34, 32]}
+	];
 
-	var margin = {top: 30, right: 10, bottom: 10, left: 10},
-		width = 960 - margin.left - margin.right,
-		height = 500 - margin.top - margin.bottom;
+	var n = 5, // number of layers
+		m = data.length, // number of samples per layer
+		stack = d3.layout.stack();
 
-	var x = d3.scale.linear()
-		.range([0, width]);
+	//go through each layer, that's the range(n) part
+	//then go through each object in data and pull out that objects's population data
+	//and put it into an array where x is the index and y is the number
+	var layers = stack(d3.range(n).map(function(d) { 
+		var a = [];
+		for (var i = 0; i < m; ++i) {
+			a[i] = {x: i, y: data[i].values[d]};  
+		}
+		return a;
+	}));
+
+	//the largest single layer
+	var yGroupMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y; }); });
+	//the largest stack
+	var yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
+
+	var margin = {top: 40, right: 10, bottom: 20, left: 50},
+		width = 677 - margin.left - margin.right,
+		height = 533 - margin.top - margin.bottom;
 
 	var y = d3.scale.ordinal()
-		.rangeRoundBands([0, height], .2);
+		.domain(d3.range(m))
+		.rangeRoundBands([2, height], .08);
 
-	var xAxis = d3.svg.axis()
-		.scale(x)
-		.orient("top");
+	var x = d3.scale.linear()
+		.domain([0, yStackMax])
+		.range([0, width]);
+
+	var color = ["#CC0000", "#FF5050", "#FFFF66", "#19D119", "#009933"];
 
 	var svg = element.append("svg")
 		.attr("width", width + margin.left + margin.right)
@@ -112,29 +136,30 @@ function currentlySuits(){
 		.append("g")
 			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	//TODO
-	x.domain(d3.extent(testData)).nice();
-	y.domain(testNames);
+	var layer = svg.selectAll(".layer")
+		.data(layers)
+		.enter().append("g")
+			.attr("class", "layer")
+			.style("fill", function(d, i) { return color[i]; });
 
-	svg.selectAll(".bar")
-		.data(testData)
-		.enter().append("rect")
-			.attr("class", function(d) { return d < 0 ? "bar negative" : "bar positive"; })
-			.attr("x", function(d) { return x(Math.min(0, d)); })
-			.attr("y", function(d, i) { return y(testNames[i]); })
-			.attr("width", function(d) { return Math.abs(x(d) - x(0)); })
-			.attr("height", y.rangeBand());
+	var bar = layer.selectAll("g")
+		.data(function(d) { return d; })
+		.enter().append("g");
 
-	svg.append("g")
-		.attr("class", "x axis")
-		.call(xAxis);
+	bar.append("rect")
+		.attr("y", function(d) { return y(d.x); })
+		.attr("x", function(d) { return x(d.y0); })
+		.attr("height", y.rangeBand())
+		.attr("width", function(d) { return x(d.y); })
+		.attr("class", "likertBar");
 
-	svg.append("g")
-		.attr("class", "y axis")
-		.append("line")
-		.attr("x1", x(0))
-		.attr("x2", x(0))
-		.attr("y2", height);
+	bar.append("text")
+		.attr("x", function(d) { return x(d.y0) + 5; })
+		.attr("y", function(d) { return y(d.x) + 10})
+		.attr("dy", ".35em")
+		.attr("font-family", "sans-serif")
+		.attr("fill", "black")
+		.text(function(d) { return d.y; });
 
 }
 
