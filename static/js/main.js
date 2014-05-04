@@ -288,7 +288,7 @@ function quotes(){
 		.enter()
 		.append("g");
 
-	blocks.append("h5")
+	blocks.append("text")
 		.text(function(d, i){return headlines[i];});
 
 	/*Create and place "blocks" containing the circle and the text */   
