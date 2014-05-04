@@ -253,6 +253,43 @@ function updateOpinions(){
 //TODO how to do an ajax call with flask, which I think actually came up in 
 //the webarch project - look at that
 
+
+function quotes(){
+	//var data = ((quoteData}};
+	var data = ["I sure do love that one thing", "I'm not too fond of that other thing", "It would be great if you'd do this third thing"];
+	//an svg
+	//three gs with title and circle
+	//quotes in circle
+	var headlines = ["Here's what one respondant likes about Telegraph:", "Here's what another respondant wishes were different:", "And here's an idea from yet another respondant:"];
+	var width = 960;
+	var height = 500;
+	var xs = [50, 140, 230];
+
+	var svg = d3.select("#quotes").append("svg")
+		.attr("width", width)
+		.attr("height", height);
+
+	/* Define the data for the circles */
+	var elem = svg.selectAll("g myCircleText")
+		.data(json.nodes)
+
+	/*Create and place "blocks" containing the circle and the text */   
+	var elemEnter = elem.enter()
+		.append("g")
+		.attr("transform", function(d, i){return "translate("+xs[i]+",80)"})
+
+	/*Create the circle for each block */
+	var circle = elemEnter.append("circle")
+		.attr("r", 40 )
+		.attr("stroke","black")
+		.attr("fill", "white")
+
+	/* Create the text for each block */
+	elemEnter.append("text")
+		.attr("dx", -20)
+		.text(function(d){return d})
+}
+/*
 function loveQuote(){
 	//display the quote passed by python
 	//var data = {{loveQuoteData}};
@@ -273,7 +310,7 @@ function randomQuote(){
 	var data = "It would be great if you'd do this third thing";
 	d3.select("#randomQuote").append("blockquote").text(data);
 }
-
+*/
 //-----------------------------------------------------------------------------
 //TODO everything below this comment would work with static data; think about
 //changing that
@@ -322,9 +359,7 @@ function connectionToTele(){
 currentlySuits();
 highestPriority();
 lowestPriority();
-loveQuote();
-hateQuote();
-randomQuote();
+quotes();
 useFrequency();
 home();
 primaryTransit();
