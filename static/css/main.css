@@ -4,7 +4,14 @@ svg {
 
 body {
 	font-family: sans-serif;
+	margin: 20px
 }
+
+.dataPane {
+	clear:both;
+}
+
+
 /*****************************************************************************/
 .vennCircle {
 	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=60);
@@ -81,4 +88,52 @@ body {
 	margin: -1px 0 0 0;
 	top: 100%;
 	left: 0;
+}
+
+/********************************************************************************/
+/*putting the quotes in circles and trying to line them up */
+/********************************************************************************/
+div.quoteCircles {
+    border: 1px solid #000;
+    border-radius: 50%;
+    height: 300px;
+    width: 300px;
+    text-align: center;
+}
+
+p.circle {
+    width: 85%;
+    height: 85%;
+    margin: 35% auto 0 auto;
+    
+}
+
+#loveQuote {
+     background: #66A1D2;
+     float: left;
+     margin-left: 20px
+}
+
+#hateQuote {
+	background: #25547B;
+	margin: 0 auto;
+}
+
+#randomQuote {
+	background: #043C6B;
+	float: right;
+	margin-right: 20px
+}
+
+/********************************************************************************/
+/*putting charts next to each other */
+/********************************************************************************/
+#highestPriority {
+	float: left;
+	margin-left: 50px;
+}
+
+#lowestPriority {
+	float: right;
+	margin-right: 50px;
 }
