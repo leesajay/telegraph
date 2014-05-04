@@ -276,29 +276,6 @@ function quotes(){
 		xs.push(x);
 	}
 
-
-var svg = element.append("svg")
-		.attr("width", width + margin.left + margin.right)
-		.attr("height", height + margin.top + margin.bottom)
-		.append("g")
-			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-	svg.append("g")
-		.attr("class", "x axis")
-		.attr("transform", "translate(0," + height + ")")
-		.call(xAxis);
-
-	var gy = svg.append("g")
-		.attr("class", "y axis")
-		.call(yAxis);
-
-	gy.selectAll("g").filter(function(d) { return d; })
-		.classed("minor", true);
-
-	gy.selectAll("text")
-		.attr("x", -6)
-		.attr("dy", -4);
-//------------------------------------------------------
-
 	var svg = d3.select("#quotes").append("svg")
 		.attr("width", width + margin.left + margin.right)
 		.attr("height", height + margin.top + margin.bottom)
@@ -306,50 +283,30 @@ var svg = element.append("svg")
 			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 	/* Define the data for the circles */
-	var elem = svg.selectAll("g")
+	var blocks = svg.selectAll("g")
 		.data(data)
+		.enter()
 		.append("g");
 
-	var text = elem.append("h5")
+	block.append("h5")
 		.text(function(d, i){return headlines[i];});
 
 	/*Create and place "blocks" containing the circle and the text */   
-	var elemEnter = elem
+	var circle = block
 		.append("g")
 		.attr("transform", function(d, i){return "translate("+xs[i]+", "+r+")"});
 
 	/*Create the circle for each block */
-	var circle = elemEnter.append("circle")
+	circle.append("circle")
 		.attr("r", r)
 		.attr("fill", "darkCyan");
 
 	/* Create the text for each block */
-	elemEnter.append("text")
+	circle.append("text")
 		.attr("dx", -20)
 		.text(function(d){return d});
 }
-/*
-function loveQuote(){
-	//display the quote passed by python
-	//var data = {{loveQuoteData}};
-	var data = "I sure do love that one thing";
-	d3.select("#loveQuote").append("blockquote").text(data);
-}
 
-function hateQuote(){
-	//display the quote passed by python
-	//var data = {{hateQuoteData}};
-	var data = "I'm not too fond of that other thing";
-	d3.select("#hateQuote").append("blockquote").text(data);
-}
-
-function randomQuote(){
-	//display the quote passed by python
-	//var data = {{randomQuoteData}};
-	var data = "It would be great if you'd do this third thing";
-	d3.select("#randomQuote").append("blockquote").text(data);
-}
-*/
 //-----------------------------------------------------------------------------
 //TODO everything below this comment would work with static data; think about
 //changing that
