@@ -311,7 +311,7 @@ function quotes(){
 
 	circle.append("foreignObject")
 		.attr("width", innerSide)
-		.attr("height", side)
+		.attr("height", innerSide)
 		.append("xhtml:body")
 			.style("font", "12pt sans-serif")
 			.html(function(d){return d});
