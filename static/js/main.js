@@ -270,7 +270,7 @@ function quotes(){
 	var d = r*2;
 	var headHeight = 30;
 	var innerSide = d * Math.cos(Math.PI / 4);
-//	var dx = radius - side / 2;
+	var dx = radius - innerSide / 2;
 
 	for(var i=0; i<3; i++){
 		var x = r;
@@ -304,7 +304,9 @@ function quotes(){
 		.attr("fill", "darkCyan");
 
 	/* Create the text for each block */
-	blocks.append("foreignObject")
+	var textg = blocks.append('g')
+		.attr("transform", "translate(" + [dx, dx] + ")");
+	textg.append("foreignObject")
 		.attr("width", innerSide)
 		.attr("height", innerSide)
 		.append("xhtml:body")
