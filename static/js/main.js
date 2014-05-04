@@ -263,31 +263,70 @@ function quotes(){
 	var headlines = ["Here's what one respondant likes about Telegraph:", "Here's what another respondant wishes were different:", "And here's an idea from yet another respondant:"];
 	var width = 960;
 	var height = 500;
-	var xs = [50, 140, 230];
+	var margin = {left: 20; right: 0; top: 10; bottom: 0};
+	var pad = 20;
+	var xs = [];
+	var r = 90;
+
+	for(var i=0; i<3; i++){
+		var x = r;
+		if(i>0){
+			x += (xs[i-1] + r + pad);
+		}
+		xs.push(x);
+	}
+
+
+var svg = element.append("svg")
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+		.append("g")
+			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	svg.append("g")
+		.attr("class", "x axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(xAxis);
+
+	var gy = svg.append("g")
+		.attr("class", "y axis")
+		.call(yAxis);
+
+	gy.selectAll("g").filter(function(d) { return d; })
+		.classed("minor", true);
+
+	gy.selectAll("text")
+		.attr("x", -6)
+		.attr("dy", -4);
+//------------------------------------------------------
 
 	var svg = d3.select("#quotes").append("svg")
-		.attr("width", width)
-		.attr("height", height);
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+		.append("g")
+			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 	/* Define the data for the circles */
-	var elem = svg.selectAll("g myCircleText")
-		.data(json.nodes)
+	var elem = svg.selectAll("g")
+		.data(data)
+		.append("g");
+
+	var text = elem.append("h5")
+		.text(function(d, i){return headlines[i];});
 
 	/*Create and place "blocks" containing the circle and the text */   
-	var elemEnter = elem.enter()
+	var elemEnter = elem
 		.append("g")
-		.attr("transform", function(d, i){return "translate("+xs[i]+",80)"})
+		.attr("transform", function(d, i){return "translate("+xs[i]+", "+r+")"});
 
 	/*Create the circle for each block */
 	var circle = elemEnter.append("circle")
-		.attr("r", 40 )
-		.attr("stroke","black")
-		.attr("fill", "white")
+		.attr("r", r)
+		.attr("fill", "darkCyan");
 
 	/* Create the text for each block */
 	elemEnter.append("text")
 		.attr("dx", -20)
-		.text(function(d){return d})
+		.text(function(d){return d});
 }
 /*
 function loveQuote(){
