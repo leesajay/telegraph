@@ -291,7 +291,9 @@ function quotes(){
 
 
 	blocks.append("text")
-		.text(function(d, i){return headlines[i];});
+		.text(function(d, i){return headlines[i];})
+		.attr("x", 0)
+		.attr("y", 0);
 
 	/*Create and place "blocks" containing the circle and the text */   
 	var circle = blocks
