@@ -289,12 +289,6 @@ function quotes(){
 		.append("g")
 		.attr("transform", function(d, i){return "translate("+xs[i]+", "+r+")"});
 
-
-	blocks.append("text")
-		.text(function(d, i){return headlines[i];})
-		.attr("x", 0)
-		.attr("y", 0);
-
 	/*Create and place "blocks" containing the circle and the text */   
 	var circle = blocks
 		.append("g");
@@ -308,6 +302,12 @@ function quotes(){
 	circle.append("text")
 		.attr("dx", -20)
 		.text(function(d){return d});
+
+	//the titles
+	blocks.append("text")
+		.text(function(d, i){return headlines[i];})
+		.attr("x", -30)
+		.attr("y", -30);
 }
 
 //-----------------------------------------------------------------------------
