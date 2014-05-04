@@ -263,7 +263,7 @@ function quotes(){
 	var headlines = ["Here's what one respondant likes about Telegraph:", "Here's what another respondant wishes were different:", "And here's an idea from yet another respondant:"];
 	var width = 960;
 	var height = 500;
-	var margin = {left: 20; right: 0; top: 10; bottom: 0};
+	var margin = {left: 20, right: 0, top: 10, bottom: 0};
 	var pad = 20;
 	var xs = [];
 	var r = 90;
