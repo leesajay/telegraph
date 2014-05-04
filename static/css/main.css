@@ -7,10 +7,12 @@ body {
 	margin: 20px
 }
 
+/* 
 .dataPane {
 	clear:both;
 }
 
+ */
 
 /*****************************************************************************/
 .vennCircle {
@@ -93,6 +95,7 @@ body {
 /********************************************************************************/
 /*putting the quotes in circles and trying to line them up */
 /********************************************************************************/
+/* 
 div.quoteCircles {
     border: 1px solid #000;
     border-radius: 50%;
@@ -124,10 +127,12 @@ p.circle {
 	float: right;
 	margin-right: 20px
 }
+ */
 
 /********************************************************************************/
 /*putting charts next to each other */
 /********************************************************************************/
+/* 
 #highestPriority {
 	float: left;
 	margin-left: 50px;
@@ -137,3 +142,4 @@ p.circle {
 	float: right;
 	margin-right: 50px;
 }
+ */
