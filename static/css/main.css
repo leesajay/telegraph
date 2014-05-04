@@ -96,8 +96,11 @@ body {
 /*putting the quotes in circles and trying to line them up */
 /********************************************************************************/
 
+.fakeh5{
+	font-size: 12pt;
+}
 
-blockquote{
+.blockquote{
   display:block;
   padding: 15px 20px 15px 45px;
   margin: 0 0 20px;
@@ -108,7 +111,7 @@ blockquote{
   text-align: justify;
 }
 
-blockquote::before{
+.blockquote::before{
   content: "\201C";
   
   font-family: Georgia, serif;
@@ -120,42 +123,10 @@ blockquote::before{
   top:5px;
 }
 
-blockquote::after{
+.blockquote::after{
   content: "";
 }
 
- 
-/*div.quoteCircles {
-    border: 1px solid #000;
-    border-radius: 50%;
-    height: 300px;
-    width: 300px;
-    text-align: center;
-}
-
-p.circle {
-    width: 85%;
-    height: 85%;
-    margin: 35% auto 0 auto;
-    
-}
-
-#loveQuote {
-     background: #66A1D2;
-     float: left;
-     margin-left: 20px
-}
-
-#hateQuote {
-	background: #25547B;
-	margin: 0 auto;
-}
-
-#randomQuote {
-	background: #043C6B;
-	float: right;
-	margin-right: 20px
-}*/
 
 /********************************************************************************/
 /*putting charts next to each other */

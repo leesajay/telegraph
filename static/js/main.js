@@ -261,8 +261,8 @@ function quotes(){
 	//three gs with title and circle
 	//quotes in circle
 	var headlines = ["Here's what one respondant likes about Telegraph:", "Here's what another respondant wishes were different:", "And here's an idea from yet another respondant:"];
-	var width = 960;
-	var height = 500;
+	var width = 700;
+	var height = 270;
 	var margin = {left: 20, right: 0, top: 10, bottom: 0};
 	var pad = 20;
 	var xs = [];
@@ -291,7 +291,9 @@ function quotes(){
 
 	/*Create and place "blocks" containing the circle and the text */   
 	var circle = blocks
-		.append("g");
+		.append("g")
+		.attr("transform", function(d, i){return "translate(0, 20)"});
+
 		
 	/*Create the circle for each block */
 	circle.append("circle")
@@ -301,13 +303,15 @@ function quotes(){
 	/* Create the text for each block */
 	circle.append("text")
 		.attr("dx", -20)
+		.attr("class", "blockquote")
 		.text(function(d){return d});
 
 	//the titles
 	blocks.append("text")
 		.text(function(d, i){return headlines[i];})
-		.attr("x", -30)
-		.attr("y", -30);
+		.attr("class", "fakeh5")
+		.attr("x", -100)
+		.attr("y", -80);
 }
 
 //-----------------------------------------------------------------------------
