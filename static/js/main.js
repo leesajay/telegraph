@@ -288,11 +288,11 @@ function quotes(){
 		.enter()
 		.append("g");
 
-	block.append("h5")
+	blocks.append("h5")
 		.text(function(d, i){return headlines[i];});
 
 	/*Create and place "blocks" containing the circle and the text */   
-	var circle = block
+	var circle = blocks
 		.append("g")
 		.attr("transform", function(d, i){return "translate("+xs[i]+", "+r+")"});
 
