@@ -286,16 +286,17 @@ function quotes(){
 	var blocks = svg.selectAll("g")
 		.data(data)
 		.enter()
-		.append("g");
+		.append("g")
+		.attr("transform", function(d, i){return "translate("+xs[i]+", "+r+")"});
+
 
 	blocks.append("text")
 		.text(function(d, i){return headlines[i];});
 
 	/*Create and place "blocks" containing the circle and the text */   
 	var circle = blocks
-		.append("g")
-		.attr("transform", function(d, i){return "translate("+xs[i]+", "+r+")"});
-
+		.append("g");
+		
 	/*Create the circle for each block */
 	circle.append("circle")
 		.attr("r", r)
