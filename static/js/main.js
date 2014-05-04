@@ -268,6 +268,7 @@ function quotes(){
 	var xs = [];
 	var r = 90;
 	var d = r*2;
+	var headHeight = 30;
 	var innerSide = d * Math.cos(Math.PI / 4);
 //	var dx = radius - side / 2;
 
@@ -303,13 +304,7 @@ function quotes(){
 		.attr("fill", "darkCyan");
 
 	/* Create the text for each block */
-	// TODO wrap
-//	circle.append("text")
-//		.attr("dx", -20)
-//		.attr("class", "blockquote")
-//		.text(function(d){return d});
-
-	circle.append("foreignObject")
+	blocks.append("foreignObject")
 		.attr("width", innerSide)
 		.attr("height", innerSide)
 		.append("xhtml:body")
@@ -319,11 +314,12 @@ function quotes(){
 
 	//the titles
 	//TODO wrap
-	blocks.append("text")
-		.text(function(d, i){return headlines[i];})
-		.attr("class", "fakeh5")
-		.attr("x", -100)
-		.attr("y", -80);
+	blocks.append("foreignObject")
+		.attr("width", d)
+		.attr("height", headHeight)
+		.append("xhtml:body")
+			.style("font", "14pt sans-serif")
+			.html(function(d, i){return headlines[i];})
 }
 
 //-----------------------------------------------------------------------------
