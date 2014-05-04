@@ -257,21 +257,21 @@ function loveQuote(){
 	//display the quote passed by python
 	//var data = {{loveQuoteData}};
 	var data = "I sure do love that one thing";
-	d3.select("#loveQuote").append("p").text(data);
+	d3.select("#loveQuote").append("blockquote").text(data);
 }
 
 function hateQuote(){
 	//display the quote passed by python
 	//var data = {{hateQuoteData}};
 	var data = "I'm not too fond of that other thing";
-	d3.select("#hateQuote").append("p").text(data);
+	d3.select("#hateQuote").append("blockquote").text(data);
 }
 
 function randomQuote(){
 	//display the quote passed by python
 	//var data = {{randomQuoteData}};
 	var data = "It would be great if you'd do this third thing";
-	d3.select("#randomQuote").append("p").text(data);
+	d3.select("#randomQuote").append("blockquote").text(data);
 }
 
 //-----------------------------------------------------------------------------
