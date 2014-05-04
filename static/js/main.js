@@ -267,6 +267,9 @@ function quotes(){
 	var pad = 20;
 	var xs = [];
 	var r = 90;
+	var d = r*2;
+	var innerSide = d * Math.cos(Math.PI / 4);
+//	var dx = radius - side / 2;
 
 	for(var i=0; i<3; i++){
 		var x = r;
@@ -291,9 +294,8 @@ function quotes(){
 
 	/*Create and place "blocks" containing the circle and the text */   
 	var circle = blocks
-		.append("g")
+		.append("g")//TODO len of text
 		.attr("transform", function(d, i){return "translate(0, 20)"});
-
 		
 	/*Create the circle for each block */
 	circle.append("circle")
@@ -301,12 +303,22 @@ function quotes(){
 		.attr("fill", "darkCyan");
 
 	/* Create the text for each block */
-	circle.append("text")
-		.attr("dx", -20)
-		.attr("class", "blockquote")
-		.text(function(d){return d});
+	// TODO wrap
+//	circle.append("text")
+//		.attr("dx", -20)
+//		.attr("class", "blockquote")
+//		.text(function(d){return d});
+
+	circle.append("foreignObject")
+		.attr("width", innerSide)
+		.attr("height", side)
+		.append("xhtml:body")
+			.style("font", "12pt sans-serif")
+			.html(function(d){return d});
+
 
 	//the titles
+	//TODO wrap
 	blocks.append("text")
 		.text(function(d, i){return headlines[i];})
 		.attr("class", "fakeh5")
