@@ -167,6 +167,10 @@ function currentlySuits(){
 		.tickValues(cats)
 		.orient("left");
 
+	svg.append("g")
+		.attr("class", "y axis")
+		.call(yAxis);
+
 	// Draw legend
 	var legend = svg.append("g")
 		.attr("class", "legend")
