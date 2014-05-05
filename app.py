@@ -25,9 +25,9 @@ def answerCount(targetAnswers, targetField, filterField, operator, filterValue):
 
     returnDict = {}
     for item in targetAnswers:
-        data = (filterValue, item)
+        data = (item,)
         #technically I know it's not "safe" to build SQL queries this way but b/c it's a SELECT and we are supplying the data I think it's ok
-        SQL = "SELECT COUNT(" + targetField + ") from r WHERE " + filterField + " " + operator + " ? AND " + targetField + " = ?;" #gets count of each answer in the target field
+        SQL = "SELECT COUNT(" + targetField + ") from r WHERE " + filterField + " " + operator + " " + filterValue + " AND " + targetField + " = ?;" #gets count of each answer in the target field
         cur.execute(SQL, data)
         returnDict[item] = cur.fetchone()[0] #appends count to the list
     
@@ -114,7 +114,7 @@ def makePane2():
 #pane 3 items
 # 3a: frequency
 def getFrequency():
-     frequency = answerCount(("Daily", "A few times per week", "A few times per month", "Rarely"), "Frequency", "ResponseID", "IS NOT", "None") #those last parameters are just essentially dummies to satisfy the function
+     frequency = answerCount(("Daily", "A few times per week", "A few times per month", "Rarely"), "Frequency", "ResponseID", "IS NOT", '\"None\"') #those last parameters are just essentially dummies to satisfy the function
      # print(frequency)
      return frequency
      
@@ -178,7 +178,6 @@ def getLocation():
     return location
 
 #for pane3c
-# including empty string in the answers for now b/c I feel no response is maybe an illuminating data point for this
 # can't use answerCount() for this b/c of the slightly difft structure needed for the SQL statement
 def getMode(priority):
     conn = s.connect("telegraph.db")
@@ -186,7 +185,7 @@ def getMode(priority):
     cur = conn.cursor()
     
     mode = {}
-    modes = ("%ACT%", "%BART%", "%Biking%", "%Driving%", "%Walking%", "%Other%", "")
+    modes = ("%ACT%", "%BART%", "%Biking%", "%Driving%", "%Walking%", "%Other%")
     for item in modes:
         SQL = "SELECT COUNT(" + priority + ") from r WHERE " + priority + " LIKE ?;"
         data = (item,)
@@ -295,14 +294,16 @@ def makeVenn(setParams):
     return vennData
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
+def sendToIndex():
+    url = "http://groups.ischool.berkeley.edu/telegraph/index"
+    return flask.redirect(url)
+
+@app.route('/index', methods=['GET'])
 #insert everything here
-def welcome():
-    app.logger.debug("welcome function called")
-    #this param is a test value to prevent errors
-    #what will go in here when we are ready is filterValue param
-    #which  is passed from the front-end form and needs to be wrapped in %
-    pane1 = makePane1("%Biking%") 
+def load_page():
+    app.logger.debug("page load called")
+    pane1 = makePane1("'%'") 
     textData = makePane2()
     frequency = getFrequency()
     location = getLocation()
@@ -310,16 +311,16 @@ def welcome():
     leastUsedTransitData = getMode("Mode6")
     tgraphConnection = [["Resident", "Yes"], ["Business", "Yes"], ["Work", "Yes"], ["Visit", "Yes"], ["Commute", "Yes"]]
     vennData = (makeVenn(tgraphConnection))
-    #app.logger.debug("PANE 1 DATA")
-    #app.logger.debug(pane1)
-    app.logger.debug("PANE 2 DATA")
-    app.logger.debug(textData)
-    app.logger.debug("PANE 3 DATA")
-    #app.logger.debug(frequency)
-    app.logger.debug(location)
-    #app.logger.debug(primaryTransitData)
-    #app.logger.debug(leastUsedTransitData)
-    #app.logger.debug(vennData)
+    app.logger.debug("PANE 1 DATA")
+    app.logger.debug(pane1)
+#     app.logger.debug("PANE 2 DATA")
+#     app.logger.debug(textData)
+#     app.logger.debug("PANE 3 DATA")
+#     #app.logger.debug(frequency)
+#     app.logger.debug(location)
+#     #app.logger.debug(primaryTransitData)
+#     #app.logger.debug(leastUsedTransitData)
+#     #app.logger.debug(vennData)
 
     #variable syntax for render params is nameInTemplate = nameInApp.py
     return flask.render_template("index.html", 
@@ -334,6 +335,50 @@ def welcome():
                                     primaryTransitData = primaryTransitData, 
                                     leastUsedTransitData = leastUsedTransitData, 
                                     connectionToTeleData = vennData)
+
+@app.route('/filtered', methods=['GET', 'POST'])
+#insert everything here
+def load_filtered_page():
+    app.logger.debug("filtered page function called")
+    if request.method == "POST":
+        #take the filter from the form
+        filterValue = request.form.get("filterValue")
+    else: filterValue = "'%'"
+    #now we are filtering on the proper data
+    pane1 = makePane1(filterValue) 
+    textData = makePane2()
+    frequency = getFrequency()
+    location = getLocation()
+    primaryTransitData = getMode("Mode1")
+    leastUsedTransitData = getMode("Mode6")
+    tgraphConnection = [["Resident", "Yes"], ["Business", "Yes"], ["Work", "Yes"], ["Visit", "Yes"], ["Commute", "Yes"]]
+    vennData = (makeVenn(tgraphConnection))
+    app.logger.debug("PANE 1 DATA")
+    app.logger.debug(pane1)
+#     app.logger.debug("PANE 2 DATA")
+#     app.logger.debug(textData)
+#     app.logger.debug("PANE 3 DATA")
+#     #app.logger.debug(frequency)
+#     app.logger.debug(location)
+#     #app.logger.debug(primaryTransitData)
+#     #app.logger.debug(leastUsedTransitData)
+#     #app.logger.debug(vennData)
+
+    #variable syntax for render params is nameInTemplate = nameInApp.py
+    return flask.render_template("index.html", 
+                                    currentlySuitsData = pane1[0],
+                                    highestPriorityData = pane1[1],
+                                    lowestPriorityData = pane1[2],
+                                    loveQuoteData = textData[0],
+                                    hateQuoteData = textData[1],
+                                    randomQuoteData = textData[2],
+                                    useFrequencyData = frequency,
+                                    homeData = location,
+                                    primaryTransitData = primaryTransitData, 
+                                    leastUsedTransitData = leastUsedTransitData, 
+                                    connectionToTeleData = vennData)
+
+
 
 
 app.secret_key = os.urandom(24)
