@@ -302,7 +302,7 @@ def welcome():
     if request.method == "POST":
         #take the filter from the form
         filterValue = request.form.get("filterValue")
-    else: filterValue = "%"
+    else: filterValue = "'%'"
     #now we are filtering on the proper data
     pane1 = makePane1(filterValue) 
     textData = makePane2()
