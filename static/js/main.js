@@ -82,12 +82,8 @@ function drawBarGraph(element, data){
 
 function currentlySuits(){
 	//the likert scale viz
-	//var data = {{currentlySuitsData}};
-	//var data = {"car": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25},
-	//	"bike": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25,},
-	//	"transit": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25}};
 	var element = d3.select("#currentlySuits");
-	//TODO lables, tooltips, legend
+	//TODO lables
 
 	var cats = ["Strongly Disagree", "Disagree", "Neutal/No Answer", "Agree", "Strongly Agree"];
 	var data = [
@@ -117,14 +113,6 @@ function currentlySuits(){
 	//the largest stack
 	var yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
 
-	//set up the tooltips TODO
-//	var tip = d3.tip()
-//		.attr('class', 'd3-tip')
-//		.offset([-10, 0])
-//		.html(function(d, i) {
-//			return "<strong>" + cats[i] + "</strong> <span style='color:red'>" + data[Math.floor(1/5)].values[i%5] + "</span>";
-//		});
-
 	var margin = {top: 40, right: 60, bottom: 20, left: 40},
 		width = 777 - margin.left - margin.right,
 		height = 373 - margin.top - margin.bottom;
@@ -144,7 +132,6 @@ function currentlySuits(){
 		.attr("height", height + margin.top + margin.bottom)
 		.append("g")
 			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-//	svg.call(tip);
 
 	var layer = svg.selectAll(".layer")
 		.data(layers)
@@ -162,8 +149,6 @@ function currentlySuits(){
 		.attr("height", y.rangeBand())
 		.attr("width", function(d) { return x(d.y); })
 		.attr("class", "likertBar");
-	//	.on('mouseover', tip.show)
-	//	.on('mouseout', tip.hide);
 
 	bar.append("text")
 		.attr("x", function(d) { return x(d.y0) + 5; })
@@ -172,6 +157,13 @@ function currentlySuits(){
 		.attr("font-family", "sans-serif")
 		.attr("fill", "black")
 		.text(function(d) { return d.y; });
+
+	var yAxis = d3.svg.axis()
+		.scale(y)
+		.tickSize(1)
+		.tickPadding(6)
+		.tickValues(labels)
+		.orient("left");
 
 	// Draw legend
 	var legend = svg.append("g")
@@ -246,13 +238,7 @@ function updateOpinions(){
 	}
 }
 
-//-----------------------------------------------------------------------------
-//javascript wouldn't have to get involved if we wanted to just refresh this
-//every time, but ajax is much cleaner
-//hold up, I have no idea how to serve this data from flask without reloading
-//TODO how to do an ajax call with flask, which I think actually came up in 
-//the webarch project - look at that
-
+//--------------------------------------------------------------------------
 
 function quotes(){
 	//var data = ((quoteData}};
@@ -260,6 +246,7 @@ function quotes(){
 	//an svg
 	//three gs with title and circle
 	//quotes in circle
+	//TODO not all by pixel
 	var headlines = ["Here's what one respondant likes about Telegraph:", "Here's what another respondant wishes were different:", "And here's an idea from yet another respondant:"];
 	var width = 700;
 	var height = 270;
@@ -305,9 +292,6 @@ function quotes(){
 		.attr("fill", "darkCyan");
 
 	/* Create the text for each block */
-//	var textg = blocks.append('g');
-//		.attr("transform", "translate(" + [dx, dx] + ")");
-
 	circle.append("foreignObject")
 		.attr("x", -80)
 		.attr("y", -40)
@@ -318,7 +302,6 @@ function quotes(){
 			.html(function(d){return d});
 
 	//the titles
-	//TODO wrap
 	blocks.append("foreignObject")
 		.attr("width", d+60)
 		.attr("height", headHeight)
@@ -360,8 +343,6 @@ function primaryTransit(){
 function connectionToTele(){
 	//venn diagram
 	//var data = {{connectionToTeleData}};
-	var data = {};
-	//TODO venn diagram
 	var sets = [{label: "Small", size: 10}, {label: "Big", size: 100}],
 		overlaps = [{sets: [0,1], size: 5}];
 
@@ -371,9 +352,9 @@ function connectionToTele(){
 	// draw the diagram
 	var diagram = venn.drawD3Diagram(d3.select("#connectionToTele"), sets, 300, 300, {opacity: 0.9});
 }
-//-----------------------------------------------------------------------------
+//--------------------------------------------------------------------------
 //main
-//-----------------------------------------------------------------------------
+//--------------------------------------------------------------------------
 currentlySuits();
 highestPriority();
 lowestPriority();
