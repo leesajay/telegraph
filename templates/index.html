@@ -311,16 +311,16 @@
 
 			function highestPriority(){
 				//bar graph of highes priority
-				//var data = {{highestPriorityData}};
-				var data = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80};
+				var data = {{highestPriorityData|tojson|safe}};
+// 				var data = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80};
 				var element = d3.select("#highestPriority");
 				drawBarGraph(element, data);
 			}
 
 			function lowestPriority(){
 				//bar graph of lowest priority
-				//var data = {{lowestPriorityData}};
-				var data = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80};
+				var data = {{lowestPriorityData|tojson|safe}};
+// 				var data = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80};
 				var element = d3.select("#lowestPriority");
 				drawBarGraph(element, data);
 			}
@@ -423,15 +423,15 @@
 
 			function useFrequency(){
 				//bar chart of use frequency
-				//var data = {{useFrequencyData}};
-				var data = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80};
+				var data = {{useFrequencyData|tojson|safe}};
+// 				var data = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80};
 				var element = d3.select("#useFrequency");
 				drawBarGraph(element, data);
 			}
 
 			function home(){
 				//bar chart of home location
-				var data = {{homeData}};
+				var data = {{homeData|tojson|safe}};
 // 				var data = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80};
 				var element = d3.select("#home");
 				drawBarGraph(element, data);
@@ -439,8 +439,8 @@
 
 			function primaryTransit(){
 				//bar chart of primary transit
-				//var data = {{primaryTransitData}};
-				var data = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80};
+				var data = {{primaryTransitData|tojson|safe}};
+// 				var data = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80};
 				var element = d3.select("#primaryTransit");
 				drawBarGraph(element, data);
 			}
