@@ -120,7 +120,9 @@ function currentlySuits(){
 		height = 373 - margin.top - margin.bottom;
 
 	var y = d3.scale.ordinal()
+	//	.domain(d3.range(m))
 		.domain(labels)
+		.range(d3.range(m))
 		.rangeRoundBands([2, height], .08);
 
 	var x = d3.scale.linear()
