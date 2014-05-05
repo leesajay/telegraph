@@ -35,27 +35,63 @@ def answerCount(targetAnswers, targetField, filterField, operator, filterValue):
     conn.close()
 
     return returnDict
+#helper function specific to the likert data structure needs of a list
+def listAnswerCount(targetAnswers, targetField, filterField, operator, filterValue):
+    '''Takes a tuple of possible answer values in the target field, the name of the target field, 
+    the name of the field  that the query filters on, and a value for the query to filter that field on. 
+    returns a list of answer counts in order that targetAnswers gives answers'''    
 
+    conn = s.connect("telegraph.db")
+    conn.text_factory = str
+    cur = conn.cursor()
+    
+    returnList = []
+    for item in targetAnswers:
+        data = (item,)
+        SQL = "SELECT COUNT(" + targetField + ") from r WHERE " + filterField + " " + operator + " " + filterValue + " AND " + targetField + " = ?;" #gets count of each answer in the target field
+        cur.execute(SQL, data)
+        count = cur.fetchone()[0]
+        returnList.append(count)
+        
+    cur.close()
+    conn.close()
+    
+    return returnList
+        
 
 def makePane1(filterValue):
     '''makes and delivers data for the first pane of our viz'''
+     #the js wants this format for the likert data:
+     #data = [{"key": "Pedestrians", "values": [answer counts from neg to pos], "key": "Cars", "values": [counts]}]
     pane1 = []
     filterField = "Mode1"
     operator = "LIKE"
     #for "Does current config work?" question
-    configAnswers = ("Strongly Agree", "Agree", "No Opinion", "Disagree", "Strongly Disagree", "") 
+    configAnswers = ("Strongly Disagree", "Disagree", "No Opinion", "Agree", "Strongly Agree") 
     configTargets = ("GoodPeds", "GoodBikes", "GoodCars", "GoodTransit")
-    configuration= {}
+    configuration= []
     for item in configTargets:
+        itemDict = {}
         if item == "GoodPeds":
-            configuration["Pedestrians"] = (answerCount(configAnswers, item, filterField, operator, filterValue))
+            itemDict["key"] = "Pedestrians"
+            itemDict["values"] = listAnswerCount(configAnswers, item, filterField, operator, filterValue)
+            configuration.append(itemDict)
+            print(itemDict)
         if item == "GoodBikes":
-            configuration["Bicyclists"] = (answerCount(configAnswers, item, filterField, operator, filterValue))
+            itemDict["key"] = "Bicyclists"
+            itemDict["values"] = listAnswerCount(configAnswers, item, filterField, operator, filterValue)
+            configuration.append(itemDict)
+            print(itemDict)
         if item == "GoodCars":
-            configuration["Drivers"] = (answerCount(configAnswers, item, filterField, operator, filterValue))
+            itemDict["key"] = "Drivers"
+            itemDict["values"] = listAnswerCount(configAnswers, item, filterField, operator, filterValue)
+            configuration.append(itemDict)
+            print(itemDict)
         if item == "GoodTransit":
-            configuration["Transit riders"] = (answerCount(configAnswers, item, filterField, operator, filterValue))
-#     print(configuration)
+            itemDict["key"] = "Transit riders"
+            itemDict["values"] = listAnswerCount(configAnswers, item, filterField, operator, filterValue)
+            configuration.append(itemDict)
+            print(itemDict)
     pane1.append(configuration)
 
     #for the highest priority improvements chart
