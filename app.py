@@ -178,7 +178,6 @@ def getLocation():
     return location
 
 #for pane3c
-# including empty string in the answers for now b/c I feel no response is maybe an illuminating data point for this
 # can't use answerCount() for this b/c of the slightly difft structure needed for the SQL statement
 def getMode(priority):
     conn = s.connect("telegraph.db")
@@ -186,7 +185,7 @@ def getMode(priority):
     cur = conn.cursor()
     
     mode = {}
-    modes = ("%ACT%", "%BART%", "%Biking%", "%Driving%", "%Walking%", "%Other%", "")
+    modes = ("%ACT%", "%BART%", "%Biking%", "%Driving%", "%Walking%", "%Other%")
     for item in modes:
         SQL = "SELECT COUNT(" + priority + ") from r WHERE " + priority + " LIKE ?;"
         data = (item,)
@@ -198,10 +197,9 @@ def getMode(priority):
             mode["Driving"] = count
         elif item == "%Walking%":
             mode["Walking"] = count
-        elif item == "%Other%":
-            mode["Other"] = count
         else:
-            mode[item] = count
+            item == "%Other%"
+            mode["Other"] = count
         
     cur.close()
     conn.close()
