@@ -197,9 +197,10 @@ def getMode(priority):
             mode["Driving"] = count
         elif item == "%Walking%":
             mode["Walking"] = count
-        else:
-            item == "%Other%"
+        elif item == "%Other%":
             mode["Other"] = count
+        else:
+            mode[item] = count
         
     cur.close()
     conn.close()
