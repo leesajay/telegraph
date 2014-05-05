@@ -15,8 +15,17 @@
 		 Telegraph, how they feel about it, and how they think it should be improved. This website summarizes the results.</p>
 		<div class="dataPane" id="opinion">
 			<h3>Respondents Broadly Agree: Telegraph doesn't work very well for anyone, but bikes have it the hardest</h3>
-			<form >
-				
+			<form id="filter" action="/" method="POST"" method="POST">
+				<label for="filterValue">See answers from Telegraph users who primarily: </label>
+				<select name="filterValue">
+					<option value="%">All</option>
+  					<option value="'%Walking%'">Walk</option>
+  					<option value="'%Driving%'">Drive</option>
+  					<option value="'%ACT%' OR Mode1 LIKE '%BART%'">Ride transit</option>
+  					<option value="'%Biking%'">Bike</option>
+  					<option value="'%Other%'">Other</option>
+				</select>
+				<input type="submit" value="See the filtered data" name="filterButton">
 			</form>
 			<div id="currentlySuits">
 				<h4>The current configuration suits...</h4>

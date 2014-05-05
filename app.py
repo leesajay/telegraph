@@ -25,9 +25,9 @@ def answerCount(targetAnswers, targetField, filterField, operator, filterValue):
 
     returnDict = {}
     for item in targetAnswers:
-        data = (filterValue, item)
+        data = (item,)
         #technically I know it's not "safe" to build SQL queries this way but b/c it's a SELECT and we are supplying the data I think it's ok
-        SQL = "SELECT COUNT(" + targetField + ") from r WHERE " + filterField + " " + operator + " ? AND " + targetField + " = ?;" #gets count of each answer in the target field
+        SQL = "SELECT COUNT(" + targetField + ") from r WHERE " + filterField + " " + operator + " " + filterValue + " AND " + targetField + " = ?;" #gets count of each answer in the target field
         cur.execute(SQL, data)
         returnDict[item] = cur.fetchone()[0] #appends count to the list
     
@@ -114,7 +114,7 @@ def makePane2():
 #pane 3 items
 # 3a: frequency
 def getFrequency():
-     frequency = answerCount(("Daily", "A few times per week", "A few times per month", "Rarely"), "Frequency", "ResponseID", "IS NOT", "None") #those last parameters are just essentially dummies to satisfy the function
+     frequency = answerCount(("Daily", "A few times per week", "A few times per month", "Rarely"), "Frequency", "ResponseID", "IS NOT", '\"None\"') #those last parameters are just essentially dummies to satisfy the function
      # print(frequency)
      return frequency
      
@@ -295,14 +295,16 @@ def makeVenn(setParams):
     return vennData
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 #insert everything here
 def welcome():
     app.logger.debug("welcome function called")
-    #this param is a test value to prevent errors
-    #what will go in here when we are ready is filterValue param
-    #which  is passed from the front-end form and needs to be wrapped in %
-    pane1 = makePane1("%Biking%") 
+    if request.method == "POST":
+        #take the filter from the form
+        filterValue = request.form.get("filterValue")
+    else: filterValue = "%"
+    #now we are filtering on the proper data
+    pane1 = makePane1(filterValue) 
     textData = makePane2()
     frequency = getFrequency()
     location = getLocation()
@@ -310,16 +312,16 @@ def welcome():
     leastUsedTransitData = getMode("Mode6")
     tgraphConnection = [["Resident", "Yes"], ["Business", "Yes"], ["Work", "Yes"], ["Visit", "Yes"], ["Commute", "Yes"]]
     vennData = (makeVenn(tgraphConnection))
-    #app.logger.debug("PANE 1 DATA")
-    #app.logger.debug(pane1)
-    app.logger.debug("PANE 2 DATA")
-    app.logger.debug(textData)
-    app.logger.debug("PANE 3 DATA")
-    #app.logger.debug(frequency)
-    app.logger.debug(location)
-    #app.logger.debug(primaryTransitData)
-    #app.logger.debug(leastUsedTransitData)
-    #app.logger.debug(vennData)
+    app.logger.debug("PANE 1 DATA")
+    app.logger.debug(pane1)
+#     app.logger.debug("PANE 2 DATA")
+#     app.logger.debug(textData)
+#     app.logger.debug("PANE 3 DATA")
+#     #app.logger.debug(frequency)
+#     app.logger.debug(location)
+#     #app.logger.debug(primaryTransitData)
+#     #app.logger.debug(leastUsedTransitData)
+#     #app.logger.debug(vennData)
 
     #variable syntax for render params is nameInTemplate = nameInApp.py
     return flask.render_template("index.html", 
