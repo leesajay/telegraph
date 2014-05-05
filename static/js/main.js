@@ -115,7 +115,7 @@ function currentlySuits(){
 	//the largest stack
 	var yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
 
-	var margin = {top: 40, right: 60, bottom: 20, left: 60},
+	var margin = {top: 40, right: 60, bottom: 20, left: 80},
 		width = 777 - margin.left - margin.right,
 		height = 373 - margin.top - margin.bottom;
 
