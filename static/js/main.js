@@ -93,6 +93,8 @@ function currentlySuits(){
 		{key:"Bikes", values:[42, 26, 23, 34, 32]}
 	];
 
+	var labels = data.map(function(d) {return d.key;});
+
 	var n = 5, // number of layers
 		m = data.length, // number of samples per layer
 		stack = d3.layout.stack();
@@ -162,7 +164,7 @@ function currentlySuits(){
 		.scale(y)
 		.tickSize(1)
 		.tickPadding(6)
-		.tickValues(labels)
+		.tickValues(cats)
 		.orient("left");
 
 	// Draw legend
