@@ -2,8 +2,8 @@
 <html>
 	<head>
 		<title>Telegraph Avenue Use Survey Results, Revisualized</title>
-		<link rel="stylesheet" type="text/css" href="telegraph/static/css/main.css">
-		
+		<link rel="stylesheet" type="text/css" href="static/css/main.css">
+		<link href='http://fonts.googleapis.com/css?family=Raleway:600|Open+Sans' rel='stylesheet' type='text/css'>	
 	</head>
 	<body>
 		<h1>Telegraph Avenue: Usage, Opinions and Ideas</h1>
@@ -13,6 +13,7 @@
 		 and driving between 20th and the Berkeley border, with a focus on the area south of 57th Street." 
 		 As a part of this project, the city surveyed 1,108 community members about how and how often they use 
 		 Telegraph, how they feel about it, and how they think it should be improved. This website summarizes the results.</p>
+		<hr/>
 		<div class="dataPane" id="opinion">
 			<h3>Respondents Broadly Agree: Telegraph doesn't work very well for anyone, but bikes have it the hardest</h3>
 			<form >
@@ -22,15 +23,16 @@
 				<h4>The current configuration suits...</h4>
 				<!--javascript will put stuff here-->
 			</div>
-			<div id="highestPriority">
+			<div id="highestPriority", class="floatMe">
 				<h4>What mode of transportation should have the highest priority?</h4>
 				<!--javascript will put stuff here-->
 			</div>
-			<div id="lowestPriority">
+			<div id="lowestPriority", class="floatMe">
 				<h4>What mode of transportation should have the lowest priority?</h4>
 				<!--javascript will put stuff here-->
 			</div>
 		</div>
+		<hr/>
 		<div class="dataPane" id="quotesPane">
 			<h3>What people said</h3>
 			<div id="randomQuotes">
@@ -60,32 +62,34 @@
 				<span id="ticketCars">Better traffic code enforcement of drivers: <em>34</em></span><span id="ticketBikes">Better traffic code enforcement of cyclists: <em>25</em></span>
 			</div>
 		</div>
+		<hr/>
 		<div class="dataPane" id="respondents">
 			<h3>Who answered the survey?</h3>
-			<div id="useFrequency">
+			<div id="useFrequency", class="floatMe">
 				<h4>How often do you use Telegraph?</h4>
 				<!--javascript will put stuff here-->
 			</div>
-			<div id="home">
+			<div id="home", class="floatMe">
 				<h4>Where do you live?</h4>
 				<!--javascript will put stuff here-->
 			</div>
-			<div id="primaryTransit">
+			<div id="primaryTransit", class="floatMe">
 				<h4>What is your primary mode of transit?</h4>
 				<!--javascript will put stuff here-->
 			</div>
-			<div id="connectionToTele">
+			<div id="connectionToTele", class="floatMe">
 				<h4>What is your connection to Telegraph?</h4>
 				<!--javascript will put stuff here-->
 			</div>
 		</div>
+		<hr/>
 		<div id="footer">
 			<p>Created by Lisa Jervis and Molly Robison in 2014 for Information Vizualization at the UC Berkeley ISchool.</p>
 		</div>
 		<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
 		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-		<script type="text/javascript" src="telegraph/static/js/venn.js"></script>
+		<script type="text/javascript" src="static/js/venn.js"></script>
 		<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
-		<script type="text/javascript" src="telegraph/static/js/main.js"></script>
+		<script type="text/javascript" src="static/js/main.js"></script>
 	</body>
 <html>

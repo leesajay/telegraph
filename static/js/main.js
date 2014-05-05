@@ -83,7 +83,7 @@ function drawBarGraph(element, data){
 function currentlySuits(){
 	//the likert scale viz
 	var element = d3.select("#currentlySuits");
-	//TODO lables
+	//TODO redraw if it already exists
 
 	var cats = ["Strongly Disagree", "Disagree", "Neutal/No Answer", "Agree", "Strongly Agree"];
 	var data = [
@@ -115,9 +115,12 @@ function currentlySuits(){
 	//the largest stack
 	var yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
 
-	var margin = {top: 40, right: 60, bottom: 20, left: 80},
-		width = 777 - margin.left - margin.right,
-		height = 373 - margin.top - margin.bottom;
+	var margin = {top: 0, right: 100, bottom: 20, left: 80};
+	var width = 800;
+	if(window.innerWidth > 800){
+		width = (window.innerWidth-100) - margin.left - margin.right;
+	}
+	var height = 373 - margin.top - margin.bottom;
 
 	var y = d3.scale.ordinal()
 		.domain(labels)
@@ -126,14 +129,11 @@ function currentlySuits(){
 	//labels
 	var yAxis = d3.svg.axis()
 		.scale(y)
-	//	.tickSize(1)
-	//	.tickPadding(6)
-		//	.tickValues(labels)
 		.orient("left");
 
 	var x = d3.scale.linear()
 		.domain([0, yStackMax])
-		.range([0, width]);
+		.range([0, width - 80]);
 
 	var color = ["#CC0000", "#FF5050", "#FFFF66", "#19D119", "#009933"];
 
@@ -185,6 +185,7 @@ function currentlySuits(){
 		.append("rect")
 		.attr("x", width - 30)
 		.attr("width", 10)
+		.attr("class", "fade")
 		.attr("height", 10);
 
 	legendRect
