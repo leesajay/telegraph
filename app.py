@@ -295,10 +295,52 @@ def makeVenn(setParams):
     return vennData
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
+def sendToIndex():
+    url = "http://groups.ischool.berkeley.edu/telegraph/index"
+    return flask.redirect(url)
+
+@app.route('/index', methods=['GET'])
 #insert everything here
-def welcome():
-    app.logger.debug("welcome function called")
+def load_page():
+    app.logger.debug("page load called")
+    pane1 = makePane1("'%'") 
+    textData = makePane2()
+    frequency = getFrequency()
+    location = getLocation()
+    primaryTransitData = getMode("Mode1")
+    leastUsedTransitData = getMode("Mode6")
+    tgraphConnection = [["Resident", "Yes"], ["Business", "Yes"], ["Work", "Yes"], ["Visit", "Yes"], ["Commute", "Yes"]]
+    vennData = (makeVenn(tgraphConnection))
+    app.logger.debug("PANE 1 DATA")
+    app.logger.debug(pane1)
+#     app.logger.debug("PANE 2 DATA")
+#     app.logger.debug(textData)
+#     app.logger.debug("PANE 3 DATA")
+#     #app.logger.debug(frequency)
+#     app.logger.debug(location)
+#     #app.logger.debug(primaryTransitData)
+#     #app.logger.debug(leastUsedTransitData)
+#     #app.logger.debug(vennData)
+
+    #variable syntax for render params is nameInTemplate = nameInApp.py
+    return flask.render_template("index.html", 
+                                    currentlySuitsData = pane1[0],
+                                    highestPriorityData = pane1[1],
+                                    lowestPriorityData = pane1[2],
+                                    loveQuoteData = textData[0],
+                                    hateQuoteData = textData[1],
+                                    randomQuoteData = textData[2],
+                                    useFrequencyData = frequency,
+                                    homeData = location,
+                                    primaryTransitData = primaryTransitData, 
+                                    leastUsedTransitData = leastUsedTransitData, 
+                                    connectionToTeleData = vennData)
+
+@app.route('/filtered', methods=['GET', 'POST'])
+#insert everything here
+def load_filtered_page():
+    app.logger.debug("filtered page function called")
     if request.method == "POST":
         #take the filter from the form
         filterValue = request.form.get("filterValue")
@@ -336,6 +378,8 @@ def welcome():
                                     primaryTransitData = primaryTransitData, 
                                     leastUsedTransitData = leastUsedTransitData, 
                                     connectionToTeleData = vennData)
+
+
 
 
 app.secret_key = os.urandom(24)

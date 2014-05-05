@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>Telegraph Avenue Use Survey Results, Revisualized</title>
-		<link rel="stylesheet" type="text/css" href="telegraph/static/css/main.css">
+		<link rel="stylesheet" type="text/css" href="static/css/main.css">
 		
 	</head>
 	<body>
@@ -15,7 +15,7 @@
 		 Telegraph, how they feel about it, and how they think it should be improved. This website summarizes the results.</p>
 		<div class="dataPane" id="opinion">
 			<h3>Respondents Broadly Agree: Telegraph doesn't work very well for anyone, but bikes have it the hardest</h3>
-			<form id="filter" action="/" method="POST"" method="POST">
+			<form id="filter" action="/telegraph/filtered" method="POST">
 				<label for="filterValue">See answers from Telegraph users who primarily: </label>
 				<select name="filterValue">
 					<option value="'%'">All</option>
@@ -93,8 +93,8 @@
 		</div>
 		<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
 		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-		<script type="text/javascript" src="telegraph/static/js/venn.js"></script>
+		<script type="text/javascript" src="static/js/venn.js"></script>
 		<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
-		<script type="text/javascript" src="telegraph/static/js/main.js"></script>
+		<script type="text/javascript" src="static/js/main.js"></script>
 	</body>
 <html>
