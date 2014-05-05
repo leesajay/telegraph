@@ -105,7 +105,7 @@ function currentlySuits(){
 	var layers = stack(d3.range(n).map(function(d) { 
 		var a = [];
 		for (var i = 0; i < m; ++i) {
-			a[i] = {x: i, y: data[i].values[d]};  
+			a[i] = {x: i, y: data[i].values[d], key:data[i].key};  
 		}
 		return a;
 	}));
@@ -115,13 +115,21 @@ function currentlySuits(){
 	//the largest stack
 	var yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
 
-	var margin = {top: 40, right: 60, bottom: 20, left: 40},
+	var margin = {top: 40, right: 60, bottom: 20, left: 80},
 		width = 777 - margin.left - margin.right,
 		height = 373 - margin.top - margin.bottom;
 
 	var y = d3.scale.ordinal()
 		.domain(labels)
 		.rangeRoundBands([2, height], .08);
+
+	//labels
+	var yAxis = d3.svg.axis()
+		.scale(y)
+	//	.tickSize(1)
+	//	.tickPadding(6)
+		//	.tickValues(labels)
+		.orient("left");
 
 	var x = d3.scale.linear()
 		.domain([0, yStackMax])
@@ -146,7 +154,7 @@ function currentlySuits(){
 		.enter().append("g");
 
 	bar.append("rect")
-		.attr("y", function(d) { return y(d.x); })
+		.attr("y", function(d) { return y(d.key); })
 		.attr("x", function(d) { return x(d.y0); })
 		.attr("height", y.rangeBand())
 		.attr("width", function(d) { return x(d.y); })
@@ -154,19 +162,11 @@ function currentlySuits(){
 
 	bar.append("text")
 		.attr("x", function(d) { return x(d.y0) + 5; })
-		.attr("y", function(d) { return y(d.x) + 10})
+		.attr("y", function(d) { return y(d.key) + 10})
 		.attr("dy", ".35em")
 		.attr("font-family", "sans-serif")
 		.attr("fill", "black")
 		.text(function(d) { return d.y; });
-
-	//labels
-	var yAxis = d3.svg.axis()
-		.scale(y)
-		.tickSize(1)
-		.tickPadding(6)
-		//	.tickValues(labels)
-		.orient("left");
 
 	svg.append("g")
 		.attr("class", "y axis")
