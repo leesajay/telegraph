@@ -268,9 +268,9 @@ function quotes(){
 	var xs = [];
 	var r = 90;
 	var d = r*2;
-	var headHeight = 30;
+	var headHeight = 70;
 	var innerSide = d * Math.cos(Math.PI / 4);
-	var dx = radius - innerSide / 2;
+	var dx = r - innerSide / 2;
 
 	for(var i=0; i<3; i++){
 		var x = r;
@@ -295,8 +295,9 @@ function quotes(){
 
 	/*Create and place "blocks" containing the circle and the text */   
 	var circle = blocks
-		.append("g")//TODO len of text
-		.attr("transform", function(d, i){return "translate(0, 20)"});
+		.append("g")
+		.attr("transform", function(d, i){
+			return "translate(0, " +headHeight+")"});
 		
 	/*Create the circle for each block */
 	circle.append("circle")
@@ -304,24 +305,28 @@ function quotes(){
 		.attr("fill", "darkCyan");
 
 	/* Create the text for each block */
-	var textg = blocks.append('g')
-		.attr("transform", "translate(" + [dx, dx] + ")");
-	textg.append("foreignObject")
+//	var textg = blocks.append('g');
+//		.attr("transform", "translate(" + [dx, dx] + ")");
+
+	circle.append("foreignObject")
+		.attr("x", -80)
+		.attr("y", -40)
 		.attr("width", innerSide)
 		.attr("height", innerSide)
 		.append("xhtml:body")
 			.style("font", "12pt sans-serif")
 			.html(function(d){return d});
 
-
 	//the titles
 	//TODO wrap
 	blocks.append("foreignObject")
-		.attr("width", d)
+		.attr("width", d+60)
 		.attr("height", headHeight)
+		.attr("x", -100)
+		.attr("y", -100)
 		.append("xhtml:body")
 			.style("font", "14pt sans-serif")
-			.html(function(d, i){return headlines[i];})
+			.html(function(d, i){return headlines[i];});
 }
 
 //-----------------------------------------------------------------------------
