@@ -115,12 +115,11 @@ function currentlySuits(){
 	//the largest stack
 	var yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
 
-	var margin = {top: 40, right: 60, bottom: 20, left: 40},
+	var margin = {top: 40, right: 60, bottom: 20, left: 60},
 		width = 777 - margin.left - margin.right,
 		height = 373 - margin.top - margin.bottom;
 
 	var y = d3.scale.ordinal()
-	//	.domain(d3.range(m))
 		.domain(labels)
 		.rangeRoundBands([2, height], .08);
 
