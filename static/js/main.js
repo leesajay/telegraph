@@ -120,7 +120,7 @@ function currentlySuits(){
 		height = 373 - margin.top - margin.bottom;
 
 	var y = d3.scale.ordinal()
-		.domain(d3.range(m))
+		.domain(labels)
 		.rangeRoundBands([2, height], .08);
 
 	var x = d3.scale.linear()
@@ -165,7 +165,7 @@ function currentlySuits(){
 		.scale(y)
 		.tickSize(1)
 		.tickPadding(6)
-		.tickValues(labels)
+		//	.tickValues(labels)
 		.orient("left");
 
 	svg.append("g")
