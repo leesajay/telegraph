@@ -160,11 +160,12 @@ function currentlySuits(){
 		.attr("fill", "black")
 		.text(function(d) { return d.y; });
 
+	//labels
 	var yAxis = d3.svg.axis()
 		.scale(y)
 		.tickSize(1)
 		.tickPadding(6)
-		.tickValues(cats)
+		.tickValues(labels)
 		.orient("left");
 
 	svg.append("g")
