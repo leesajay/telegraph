@@ -451,9 +451,9 @@
 
 			function connectionToTele(){
 				//venn diagram
-				//var data = {{connectionToTeleData}};
-				var sets = [{label: "Small", size: 10}, {label: "Big", size: 100}],
-					overlaps = [{sets: [0,1], size: 5}];
+				var data = {{connectionToTeleData|tojson|safe}};
+				var sets = data[0],
+					overlaps = data[1];
 
 				// get positions for each set
 				sets = venn.venn(sets, overlaps);
