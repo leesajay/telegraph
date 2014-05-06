@@ -420,7 +420,8 @@ def load_filtered_page():
                                     homeData = location,
                                     primaryTransitData = primaryTransitData, 
                                     leastUsedTransitData = leastUsedTransitData, 
-                                    connectionToTeleData = vennData)
+                                    connectionToTeleData = vennData,
+                                    dropdownValue = filterValue)
 
 
 

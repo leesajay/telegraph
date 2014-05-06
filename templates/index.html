@@ -18,7 +18,7 @@
 			<h3>Respondents broadly agree: Telegraph doesn't work very well for anyone, but bikes have it the hardest</h3>
 			<form id="filter" action="/telegraph/filtered" method="POST">
 				<label for="filterValue">See answers from Telegraph users who primarily: </label>
-				<select name="filterValue">
+				<select name="filterValue" id="filterValue">
 					<option value="'%'">Use any form of transit</option>
   					<option value="'%Walking%'">Walk</option>
   					<option value="'%Driving%'">Drive</option>
@@ -104,6 +104,11 @@
 			//Utility functions
 			//-----------------------------------------------------------------------------
 
+			function getDropdownValue() {
+			    var dropdownValue = {{dropdownValue|safe}};
+			document.GetElementById("filterValue").value=dropdownValue;
+			}
+			
 			function drawBarGraph(element, data){
 				//TODO redraw if it already exists
 
