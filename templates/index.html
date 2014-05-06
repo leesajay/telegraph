@@ -417,6 +417,7 @@
 					.attr("fill", "darkCyan");
 
 				/* Create the text for each block */
+				//this is a hack, but it will probably remain a hack
 				circle.append("foreignObject")
 					.attr("x", -80)
 					.attr("y", -40)
@@ -431,7 +432,7 @@
 					.attr("width", d+60)
 					.attr("height", headHeight)
 					.attr("x", -100)
-					.attr("y", -100)
+					.attr("y", 0-headHeight)
 					.append("xhtml:body")
 						.style("font", "14pt sans-serif")
 						.html(function(d, i){return headlines[i];});
