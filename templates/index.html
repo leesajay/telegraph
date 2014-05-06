@@ -104,8 +104,10 @@
 			//Utility functions
 			//-----------------------------------------------------------------------------
 
-			function drawBarGraph(element, data, wrap=false){
+			function drawBarGraph(element, data, wrap){
 				//TODO redraw if it already exists
+
+				wrap = wrap || false;
 
 				//split up the data into titles and values
 				var dataset = [];
