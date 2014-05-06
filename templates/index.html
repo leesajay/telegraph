@@ -105,8 +105,8 @@
 			//-----------------------------------------------------------------------------
 
 			function getDropdownValue() {
-			    var dropdownValue = {{dropdownValue|safe}};
-			document.GetElementById("filterValue").value=dropdownValue;
+				var dropdownValue = "{{dropdownValue|safe}}";
+				document.getElementById("filterValue").value=dropdownValue;
 			}
 			
 			function drawBarGraph(element, data){
@@ -451,6 +451,7 @@
 			home();
 			primaryTransit();
 			connectionToTele();
+			getDropdownValue();
 
 		</script>
 	</body>
