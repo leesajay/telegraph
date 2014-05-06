@@ -160,7 +160,7 @@
 						.attr("transform", "translate(0," + height + ")")
 						.call(xAxis)
 						.selectAll(".tick text")
-							.call(wrap, x.rangeBand());
+							.call(wrapText, x.rangeBand());
 				}else{
 					svg.append("g")
 						.attr("class", "x axis")
@@ -192,7 +192,7 @@
 					.on('mouseout', tip.hide);
 			}
 
-			function wrap(text, width) {
+			function wrapText(text, width) {
 				text.each(function() {
 					var text = d3.select(this),
 						words = text.text().split(/\s+/).reverse(),
