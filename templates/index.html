@@ -222,7 +222,7 @@
 				//the largest stack
 				var yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
 
-				var margin = {top: 40, right: 60, bottom: 20, left: 80},
+				var margin = {top: 0, right: 60, bottom: 20, left: 80},
 					height = 373 - margin.top - margin.bottom;
 				var width = 800 - margin.left - margin.right;
 				if(window.innerWidth > 800){
@@ -372,9 +372,9 @@
 				}
 
 				var xs = [];
-				var r = 90;
+				var r = width/5;
 				var d = r*2;
-				var pad = Math.floor((width-(3*d))/3);
+				var pad = Math.floor((width-(3*d))/2)-20;
 				var headHeight = 70;
 				var innerSide = d * Math.cos(Math.PI / 4);
 				var dx = r - innerSide / 2;
