@@ -160,7 +160,7 @@
 						.attr("transform", "translate(0," + height + ")")
 						.call(xAxis)
 						.selectAll(".tick text")
-							.call(wrap, x.rangeBand());
+							.call(wrapText, x.rangeBand());
 				}else{
 					svg.append("g")
 						.attr("class", "x axis")
@@ -192,7 +192,7 @@
 					.on('mouseout', tip.hide);
 			}
 
-			function wrap(text, width) {
+			function wrapText(text, width) {
 				text.each(function() {
 					var text = d3.select(this),
 						words = text.text().split(/\s+/).reverse(),
@@ -363,7 +363,7 @@
 			//--------------------------------------------------------------------------
 
 			function quotes(){
-				var data = {{quoteData|tojson|safe}};
+				var data = {{quoteData|safe}};
 // 				var data = ["I sure do love that one thing and also this is a really long quote oh boy this quote is so long it's gotta be the longest quote I've ever seen", "I'm not too fond of that other thing", "It would be great if you'd do this third thing"];
 				//TODO not all by pixel
 				var headlines = ["Here's what one respondant likes about Telegraph:", "Here's what another respondant wishes were different:", "And here's an idea from yet another respondant:"];
