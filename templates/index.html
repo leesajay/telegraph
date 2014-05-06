@@ -78,12 +78,12 @@
 				<h4>How often do you use Telegraph?</h4>
 				<!--javascript will put stuff here-->
 			</div>
-			<div id="home", class="floatMe">
-				<h4>Where do you live?</h4>
-				<!--javascript will put stuff here-->
-			</div>
 			<div id="primaryTransit", class="floatMe">
 				<h4>What is your primary mode of transit?</h4>
+				<!--javascript will put stuff here-->
+			</div>
+			<div id="home", class="floatMe">
+				<h4>Where do you live?</h4>
 				<!--javascript will put stuff here-->
 			</div>
 			<div id="connectionToTele", class="floatMe">
@@ -185,15 +185,8 @@
 			function currentlySuits(){
 				//the likert scale viz
 				var element = d3.select("#currentlySuits");
-				//TODO lables
 
 				var cats = ["Strongly Disagree", "Disagree", "Neutal/No Answer", "Agree", "Strongly Agree"];
-// 				var data = [
-// 					{key:"Pedestrians", values:[25, 62, 22, 37, 41]},
-// 					{key:"Cars", values:[36, 52, 36, 22, 61]},
-// 					{key:"Transit", values:[31, 52, 41, 62, 41]},
-// 					{key:"Bikes", values:[42, 26, 23, 34, 32]}
-// 				];
 				var data = {{currentlySuitsData|tojson|safe}};
 // 				console.log(data);
 // 				for (var key in data) {
@@ -235,9 +228,6 @@
 				//labels
 				var yAxis = d3.svg.axis()
 					.scale(y)
-				//	.tickSize(1)
-				//	.tickPadding(6)
-					//	.tickValues(labels)
 					.orient("left");
 
 				var x = d3.scale.linear()
@@ -323,7 +313,6 @@
 			function highestPriority(){
 				//bar graph of highes priority
 				var data = {{highestPriorityData|tojson|safe}};
-// 				var data = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80};
 				var element = d3.select("#highestPriority");
 				drawBarGraph(element, data);
 			}
@@ -331,53 +320,32 @@
 			function lowestPriority(){
 				//bar graph of lowest priority
 				var data = {{lowestPriorityData|tojson|safe}};
-// 				var data = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80};
 				var element = d3.select("#lowestPriority");
 				drawBarGraph(element, data);
 			}
 
-	/*		function updateOpinions(){
-				//update everything in the opinions pane: takes a list of datasets that Python
-				//already dealt with
-				//var dataList = {{updateOpinionsData}};
-				var dataList = {"lowestPriority": {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80},
-					"highestPriority": {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80},
-					"currentlySuits": {"car": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25},
-						"bike": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25,},
-						"transit": {"stronglyAgree": 4, "agree": 5, "neutral": 9, "disagree": 15, "stronglyDisagree": 25}}}
-				//for each list in that list of lists
-					//call drawGraph on the element and the list of data
-				for(var key in dataList){
-					var data = dataList[key];
-					var element = document.getElementById(key);
-					drawBarGraph(element, data);
-				}
-			} */
 
 			//--------------------------------------------------------------------------
 
 			function quotes(){
 				//var data = ((quoteData}};
 				var data = ["I sure do love that one thing and also this is a really long quote oh boy this quote is so long it's gotta be the longest quote I've ever seen", "I'm not too fond of that other thing", "It would be great if you'd do this third thing"];
-				//an svg
-				//three gs with title and circle
-				//quotes in circle
 				//TODO not all by pixel
 				var headlines = ["Here's what one respondant likes about Telegraph:", "Here's what another respondant wishes were different:", "And here's an idea from yet another respondant:"];
-				var margin = {left: 20, right: 0, top: 10, bottom: 0};
-				var height = 300 - margin.top - margin.bottom;
+				var margin = {left: 20, right: 20, top: 10, bottom: 0};
 				var width = 800 - margin.left - margin.right;
 				if(window.innerWidth > 800){
 					width = (window.innerWidth-100) - margin.left - margin.right;
 				}
 
 				var xs = [];
-				var r = width/5;
+				var r = width/8;
 				var d = r*2;
-				var pad = Math.floor((width-(3*d))/2)-20;
-				var headHeight = 70;
+				var pad = Math.floor((width-(3*d))/2);
+				var headHeight = 100;
 				var innerSide = d * Math.cos(Math.PI / 4);
 				var dx = r - innerSide / 2;
+				var height = d + headHeight - margin.top - margin.bottom;
 
 				for(var i=0; i<3; i++){
 					var x = r;
@@ -432,14 +400,11 @@
 						.html(function(d, i){return headlines[i];});
 			}
 
-			//-----------------------------------------------------------------------------
-			//TODO everything below this comment would work with static data; think about
-			//changing that
+			//--------------------------------------------------------------
 
 			function useFrequency(){
 				//bar chart of use frequency
 				var data = {{useFrequencyData|tojson|safe}};
-// 				var data = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80};
 				var element = d3.select("#useFrequency");
 				drawBarGraph(element, data);
 			}
@@ -447,7 +412,6 @@
 			function home(){
 				//bar chart of home location
 				var data = {{homeData|tojson|safe}};
-// 				var data = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80};
 				var element = d3.select("#home");
 				drawBarGraph(element, data);
 			}
@@ -455,7 +419,6 @@
 			function primaryTransit(){
 				//bar chart of primary transit
 				var data = {{primaryTransitData|tojson|safe}};
-// 				var data = {"cars": 24, "bikes": 125, "transit":73, "pedestrians":80};
 				var element = d3.select("#primaryTransit");
 				drawBarGraph(element, data);
 			}
@@ -472,9 +435,9 @@
 				// draw the diagram
 				var diagram = venn.drawD3Diagram(d3.select("#connectionToTele"), sets, 300, 300, {opacity: 0.9});
 			}
-			//--------------------------------------------------------------------------
+			//------------------------------------------------------------
 			//main
-			//--------------------------------------------------------------------------
+			//------------------------------------------------------
 			currentlySuits();
 			highestPriority();
 			lowestPriority();
