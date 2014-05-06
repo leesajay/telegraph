@@ -185,14 +185,20 @@
 			function currentlySuits(){
 				//the likert scale viz
 				var element = d3.select("#currentlySuits");
+				//TODO lables
 
 				var cats = ["Strongly Disagree", "Disagree", "Neutal/No Answer", "Agree", "Strongly Agree"];
-				var data = [
-					{key:"Pedestrians", values:[25, 62, 22, 37, 41]},
-					{key:"Cars", values:[36, 52, 36, 22, 61]},
-					{key:"Transit", values:[31, 52, 41, 62, 41]},
-					{key:"Bikes", values:[42, 26, 23, 34, 32]}
-				];
+// 				var data = [
+// 					{key:"Pedestrians", values:[25, 62, 22, 37, 41]},
+// 					{key:"Cars", values:[36, 52, 36, 22, 61]},
+// 					{key:"Transit", values:[31, 52, 41, 62, 41]},
+// 					{key:"Bikes", values:[42, 26, 23, 34, 32]}
+// 				];
+				var data = {{currentlySuitsData|tojson|safe}};
+// 				console.log(data);
+// 				for (var key in data) {
+// 					console.log(data[key]);
+// 				}
 
 				var labels = data.map(function(d) {return d.key;});
 
@@ -351,6 +357,9 @@
 			function quotes(){
 				//var data = ((quoteData}};
 				var data = ["I sure do love that one thing", "I'm not too fond of that other thing", "It would be great if you'd do this third thing"];
+				//an svg
+				//three gs with title and circle
+				//quotes in circle
 				//TODO not all by pixel
 				var headlines = ["Here's what one respondant likes about Telegraph:", "Here's what another respondant wishes were different:", "And here's an idea from yet another respondant:"];
 				var width = 700;
