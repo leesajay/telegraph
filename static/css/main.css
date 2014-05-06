@@ -64,11 +64,11 @@ h1, h2, h3, h4, h5 {
 }
 
 #currentlySuits .tick {
-	font-size: 12pt;
+	font-size: 11pt;
 }
 
 #currentlySuits .legend {
-	font-size: 12pt;
+	font-size: 11pt;
 }
 /*****************************************************************************/
 .axis path {
@@ -123,46 +123,3 @@ h1, h2, h3, h4, h5 {
 .fakeh5{
 	font-size: 12pt;
 }
-
-.blockquote{
-  display:block;
-  padding: 15px 20px 15px 45px;
-  margin: 0 0 20px;
-  position: relative;
-  
-  font-size: 16px;
-  line-height: 1.2;
-  text-align: justify;
-}
-
-.blockquote::before{
-  content: "\201C";
-  
-  font-family: Georgia, serif;
-  font-size: 60px;
-  font-weight: bold;
-  
-  position: absolute;
-  left: 10px;
-  top:5px;
-}
-
-.blockquote::after{
-  content: "";
-}
-
-
-/********************************************************************************/
-/*putting charts next to each other */
-/********************************************************************************/
-/* 
-#highestPriority {
-	float: left;
-	margin-left: 50px;
-}
-
-#lowestPriority {
-	float: right;
-	margin-right: 50px;
-}
- */

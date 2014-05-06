@@ -223,10 +223,6 @@
 
 				var cats = ["Strongly Disagree", "Disagree", "Neutal/No Answer", "Agree", "Strongly Agree"];
 				var data = {{currentlySuitsData|tojson|safe}};
-// 				console.log(data);
-// 				for (var key in data) {
-// 					console.log(data[key]);
-// 				}
 
 				var labels = data.map(function(d) {return d.key;});
 
@@ -250,7 +246,7 @@
 				//the largest stack
 				var yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
 
-				var margin = {top: 0, right: 60, bottom: 20, left: 80},
+				var margin = {top: 0, right: 85, bottom: 20, left: 95},
 					height = 373 - margin.top - margin.bottom;
 				var width = 800 - margin.left - margin.right;
 				if(window.innerWidth > 800){
