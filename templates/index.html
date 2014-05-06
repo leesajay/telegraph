@@ -223,9 +223,11 @@
 				var yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
 
 				var margin = {top: 40, right: 60, bottom: 20, left: 80},
-					width = 777 - margin.left - margin.right,
 					height = 373 - margin.top - margin.bottom;
-
+				var width = 800 - margin.left - margin.right;
+				if(window.innerWidth > 800){
+					width = (window.innerWidth-100) - margin.left - margin.right;
+				}
 				var y = d3.scale.ordinal()
 					.domain(labels)
 					.rangeRoundBands([2, height], .08);
@@ -240,7 +242,7 @@
 
 				var x = d3.scale.linear()
 					.domain([0, yStackMax])
-					.range([0, width]);
+					.range([0, width-80]);
 
 				var color = ["#CC0000", "#FF5050", "#FFFF66", "#19D119", "#009933"];
 
