@@ -15,11 +15,11 @@
 		 Telegraph, how they feel about it, and how they think it should be improved. This website summarizes the results.</p>
 		<hr/>
 		<div class="dataPane" id="opinion">
-			<h3>Respondents Broadly Agree: Telegraph doesn't work very well for anyone, but bikes have it the hardest</h3>
+			<h3>Respondents broadly agree: Telegraph doesn't work very well for anyone, but bikes have it the hardest</h3>
 			<form id="filter" action="/telegraph/filtered" method="POST">
 				<label for="filterValue">See answers from Telegraph users who primarily: </label>
 				<select name="filterValue">
-					<option value="'%'">All</option>
+					<option value="'%'">Use any form of transit</option>
   					<option value="'%Walking%'">Walk</option>
   					<option value="'%Driving%'">Drive</option>
   					<option value="'%ACT%' OR Mode1 LIKE '%BART%'">Ride transit</option>
@@ -33,11 +33,11 @@
 				<!--javascript will put stuff here-->
 			</div>
 			<div id="highestPriority", class="floatMe">
-				<h4>What mode of transportation should have the highest priority?</h4>
+				<h4>What mode of transportation should have the highest priority for improvements?</h4>
 				<!--javascript will put stuff here-->
 			</div>
 			<div id="lowestPriority", class="floatMe">
-				<h4>What mode of transportation should have the lowest priority?</h4>
+				<h4>What mode of transportation should have the lowest priority for improvements?</h4>
 				<!--javascript will put stuff here-->
 			</div>
 		</div>
@@ -45,17 +45,17 @@
 		<div class="dataPane" id="quotesPane">
 			<h3>What people said</h3>
 			<div id="randomQuotes">
-				<p>The survey contained a few open text fields. Here's some of what people had to say.</p>
-				<form id="refreshQuotes">
-					<button>Give me new quotes</button>
-				</form>
+				<p>The survey offered the opportunity for open comments. Here's some of what people had to say.</p>
+				
 				<div id="quotes">
 					
 				</div>
+				<form id="refreshQuotes">
+					<button>Give me new quotes</button>
+				</form>
 			</div>
 			<div id="mostProposed">
-				<h4>The top 5 most commonly proposed ideas for improving Telegraph</h4>
-				<h5>And the number of people who proposed them</h5>
+				<h4>The top 5 most commonly proposed ideas for improving Telegraph and the number of people who proposed them</h4>
 				<ul>
 					<li>More and/or more protected bike lanes: <em>445</em></li>
 					<li>Pedestrian realm improvements such as wider sidewalks and more crosswalks: <em>397</em></li>
@@ -65,7 +65,7 @@
 				</ul>
 			</div>
 			<div id="conflictingOpinions">
-				<h4>Not everyone agrees with each other</h4>
+				<h4>In spite of broad-strokes agreement, there are still some conflicting opinions</h4>
 				<span id="antiCars">Ban cars on Telegraph: <em>3</em></span><span id="antiBikes">Ban bikes on Telegraph: <em>3</em></span>
 				<span id="proParking">Create more parking: <em>29</em></span><span id="antiParking">Less parking: <em>7</em></span>
 				<span id="ticketCars">Better traffic code enforcement of drivers: <em>34</em></span><span id="ticketBikes">Better traffic code enforcement of cyclists: <em>25</em></span>
@@ -104,10 +104,8 @@
 			//Utility functions
 			//-----------------------------------------------------------------------------
 
-			function drawBarGraph(element, data, wrap){
+			function drawBarGraph(element, data){
 				//TODO redraw if it already exists
-
-				wrap = wrap || false;
 
 				//split up the data into titles and values
 				var dataset = [];
@@ -117,8 +115,8 @@
 					titles.push(key);
 				}
 
-				var margin = {top: 20, right: 0, bottom: 30, left: 15},
-					width = 400 - margin.left - margin.right,
+				var margin = {top: 20, right: 0, bottom: 20, left: 15},
+					width = 350 - margin.left - margin.right,
 					height = 300 - margin.top - margin.bottom;
 
 				//set up some stuff for the axis
@@ -154,19 +152,10 @@
 				x.domain(titles);
 				y.domain([0, d3.max(dataset)]);
 
-				if(wrap){
-					svg.append("g")
-						.attr("class", "x axis")
-						.attr("transform", "translate(0," + height + ")")
-						.call(xAxis)
-						.selectAll(".tick text")
-							.call(wrapText, x.rangeBand());
-				}else{
-					svg.append("g")
-						.attr("class", "x axis")
-						.attr("transform", "translate(0," + height + ")")
-						.call(xAxis);
-				}
+				svg.append("g")
+					.attr("class", "x axis")
+					.attr("transform", "translate(0," + height + ")")
+					.call(xAxis);
 
 				var gy = svg.append("g")
 					.attr("class", "y axis")
@@ -191,30 +180,6 @@
 					.on('mouseover', tip.show)
 					.on('mouseout', tip.hide);
 			}
-
-			function wrapText(text, width) {
-				text.each(function() {
-					var text = d3.select(this),
-						words = text.text().split(/\s+/).reverse(),
-						word,
-						line = [],
-						lineNumber = 0,
-						lineHeight = 1.1, // ems
-						y = text.attr("y"),
-						dy = parseFloat(text.attr("dy")),
-						tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-					while (word = words.pop()) {
-						line.push(word);
-						tspan.text(line.join(" "));
-						if (tspan.node().getComputedTextLength() > width) {
-							line.pop();
-							tspan.text(line.join(" "));
-							line = [word];
-							tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
-						}
-					}
-				});
-			}
 			//-----------------------------------------------------------------------------
 
 			function currentlySuits(){
@@ -223,6 +188,10 @@
 
 				var cats = ["Strongly Disagree", "Disagree", "Neutal/No Answer", "Agree", "Strongly Agree"];
 				var data = {{currentlySuitsData|tojson|safe}};
+// 				console.log(data);
+// 				for (var key in data) {
+// 					console.log(data[key]);
+// 				}
 
 				var labels = data.map(function(d) {return d.key;});
 
@@ -246,7 +215,7 @@
 				//the largest stack
 				var yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
 
-				var margin = {top: 0, right: 85, bottom: 20, left: 95},
+				var margin = {top: 0, right: 60, bottom: 20, left: 80},
 					height = 373 - margin.top - margin.bottom;
 				var width = 800 - margin.left - margin.right;
 				if(window.innerWidth > 800){
@@ -362,7 +331,7 @@
 				var data = {{quoteData|safe}};
 // 				var data = ["I sure do love that one thing and also this is a really long quote oh boy this quote is so long it's gotta be the longest quote I've ever seen", "I'm not too fond of that other thing", "It would be great if you'd do this third thing"];
 				//TODO not all by pixel
-				var headlines = ["Here's what one respondant likes about Telegraph:", "Here's what another respondant wishes were different:", "And here's an idea from yet another respondant:"];
+				var headlines = ["Here's what one person likes about Telegraph:", "Here's what another person wishes were different:", "And here's an idea from yet another person:"];
 				var margin = {left: 20, right: 20, top: 10, bottom: 0};
 				var width = 800 - margin.left - margin.right;
 				if(window.innerWidth > 800){
@@ -437,14 +406,14 @@
 				//bar chart of use frequency
 				var data = {{useFrequencyData|tojson|safe}};
 				var element = d3.select("#useFrequency");
-				drawBarGraph(element, data, true);
+				drawBarGraph(element, data);
 			}
 
 			function home(){
 				//bar chart of home location
 				var data = {{homeData|tojson|safe}};
 				var element = d3.select("#home");
-				drawBarGraph(element, data, true);
+				drawBarGraph(element, data);
 			}
 
 			function primaryTransit(){
