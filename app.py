@@ -7,6 +7,7 @@ import sqlite3 as s
 import itertools
 import random
 import string
+from types import *
 from flask import Flask,request, session, escape, redirect, jsonify
 
 # create our little application
@@ -118,33 +119,44 @@ def getRandom(targetField):
     responseID = str(random.randint(1,1108))
     SQL = "SELECT " + targetField + " FROM r WHERE ResponseID = ?;"
     data = (responseID,)
+#     app.logger.debug("executing SQL")
     cur.execute(SQL, data)
+#     candidate = "fuzzy pickles"
+#     app.logger.debug(candidate)
+#     app.logger.debug("that should have been fuzzy pickles")
     candidate = cur.fetchone()[0]
+#     app.logger.debug(candidate)
+#     app.logger.debug("that should not have been fuzzy pixkles")
     #I have tried many combos of different Booleans to exclude both None and '' and I can never get them both
     # excluded and I don't know why!!
-    if candidate != None and candidate != "": 
+#     if type(candidate) == NoneType:
+#         app.logger.debug("PANIC")
+    if len(candidate) > 0:
         cur.close()
         conn.close()
         return candidate
-    else:
-        getRandom(targetField)
-
-
+    else: 
+#         app.logger.debug("Candidate was bad! This is what it was:")
+#         app.logger.debug(candidate)
+#         app.logger.debug("trying again")
+        return(getRandom(targetField))
+        
 def makePane2():
     '''makes the data object for the second, text-based pane'''    
     textData = []
     textData.append(getRandom("Like"))
     textData.append(getRandom("WishDifferent"))
     randomIdea = random.choice(["IdeasCars", "IdeasTransit", "IdeaseBikes", "IdeasPeds"])
+    ideaText = getRandom(randomIdea)
     if randomIdea == "IdeasCars":
-        textData.append("To improve Telegraph for cars...")
+        textData.append("To improve Telegraph for cars: " + ideaText)
     if randomIdea == "IdeasTransit":
-        textData.append("To improve Telegraph for public transit...")
+        textData.append("To improve Telegraph for public transit: " + ideaText)
     if randomIdea == "IdeaseBikes":
-        textData.append("To improve Telegraph for bikes...") 
+        textData.append("To improve Telegraph for bikes: " + ideaText) 
     if randomIdea == "IdeasPeds":
-        textData.append("To improve Telegraph for pedestrians...")
-    textData.append(getRandom(randomIdea))
+        textData.append("To improve Telegraph for pedestrians: " + ideaText)
+        
     return textData
 
 #pane 3 items
@@ -347,8 +359,8 @@ def load_page():
     leastUsedTransitData = getMode("Mode6")
     tgraphConnection = [["Resident", "Yes"], ["Business", "Yes"], ["Work", "Yes"], ["Visit", "Yes"], ["Commute", "Yes"]]
     vennData = (makeVenn(tgraphConnection))
-    app.logger.debug("PANE 1 DATA")
-    app.logger.debug(pane1)
+#     app.logger.debug("PANE 1 DATA")
+#     app.logger.debug(pane1)
 #     app.logger.debug("PANE 2 DATA")
 #     app.logger.debug(textData)
 #     app.logger.debug("PANE 3 DATA")
@@ -363,9 +375,7 @@ def load_page():
                                     currentlySuitsData = pane1[0],
                                     highestPriorityData = pane1[1],
                                     lowestPriorityData = pane1[2],
-                                    loveQuoteData = textData[0],
-                                    hateQuoteData = textData[1],
-                                    randomQuoteData = textData[2],
+                                    quoteData = textData,
                                     useFrequencyData = frequency,
                                     homeData = location,
                                     primaryTransitData = primaryTransitData, 
@@ -389,8 +399,8 @@ def load_filtered_page():
     leastUsedTransitData = getMode("Mode6")
     tgraphConnection = [["Resident", "Yes"], ["Business", "Yes"], ["Work", "Yes"], ["Visit", "Yes"], ["Commute", "Yes"]]
     vennData = (makeVenn(tgraphConnection))
-    app.logger.debug("PANE 1 DATA")
-    app.logger.debug(pane1)
+#     app.logger.debug("PANE 1 DATA")
+#     app.logger.debug(pane1)
 #     app.logger.debug("PANE 2 DATA")
 #     app.logger.debug(textData)
 #     app.logger.debug("PANE 3 DATA")
@@ -405,9 +415,7 @@ def load_filtered_page():
                                     currentlySuitsData = pane1[0],
                                     highestPriorityData = pane1[1],
                                     lowestPriorityData = pane1[2],
-                                    loveQuoteData = textData[0],
-                                    hateQuoteData = textData[1],
-                                    randomQuoteData = textData[2],
+                                    quoteData = textData,
                                     useFrequencyData = frequency,
                                     homeData = location,
                                     primaryTransitData = primaryTransitData, 
