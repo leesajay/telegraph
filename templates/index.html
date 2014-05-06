@@ -110,16 +110,22 @@
 			}
 			
 			function drawBarGraph(element, data, wrap){
-				//TODO redraw if it already exists
 
 				wrap = false || wrap;
+
+				//sort the data by key
+				var sortable = [];
+				for (var vehicle in maxSpeed){
+					sortable.push([vehicle, maxSpeed[vehicle]])
+				}
+				sortable.sort(function(a, b) {return a[1] - b[1]})
 
 				//split up the data into titles and values
 				var dataset = [];
 				var titles = [];
-				for(var key in data){
-					dataset.push(data[key]);
-					titles.push(key);
+				for(var i=0; i<sortable.length; i++){
+					dataset.push(sortable[i][1]);
+					titles.push(sortable[i][0]);
 				}
 
 				var margin = {top: 10, right: 0, bottom: 40, left: 15},
