@@ -109,8 +109,10 @@
 				document.getElementById("filterValue").value=dropdownValue;
 			}
 			
-			function drawBarGraph(element, data){
+			function drawBarGraph(element, data, wrap){
 				//TODO redraw if it already exists
+
+				wrap = false || wrap;
 
 				//split up the data into titles and values
 				var dataset = [];
@@ -157,10 +159,20 @@
 				x.domain(titles);
 				y.domain([0, d3.max(dataset)]);
 
-				svg.append("g")
-					.attr("class", "x axis")
-					.attr("transform", "translate(0," + height + ")")
-					.call(xAxis);
+
+				if(wrap){
+					svg.append("g")
+						.attr("class", "x axis")
+						.attr("transform", "translate(0," + height + ")")
+						.call(xAxis)
+						.selectAll(".tick text")
+							.call(wrapText, x.rangeBand());
+				}else{
+					svg.append("g")
+						.attr("class", "x axis")
+						.attr("transform", "translate(0," + height + ")")
+						.call(xAxis);
+				}
 
 				var gy = svg.append("g")
 					.attr("class", "y axis")
@@ -185,6 +197,32 @@
 					.on('mouseover', tip.show)
 					.on('mouseout', tip.hide);
 			}
+
+
+			function wrapText(text, width) {
+				text.each(function() {
+					var text = d3.select(this),
+						words = text.text().split(/\s+/).reverse(),
+						word,
+						line = [],
+						lineNumber = 0,
+						lineHeight = 1.1, // ems
+						y = text.attr("y"),
+						dy = parseFloat(text.attr("dy")),
+						tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+					while (word = words.pop()) {
+ 						line.push(word);
+						tspan.text(line.join(" "));
+						if (tspan.node().getComputedTextLength() > width) {
+							line.pop();
+							tspan.text(line.join(" "));
+							line = [word];
+							tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+						}
+					}
+				});
+			}
+
 			//-----------------------------------------------------------------------------
 
 			function currentlySuits(){
@@ -411,14 +449,14 @@
 				//bar chart of use frequency
 				var data = {{useFrequencyData|tojson|safe}};
 				var element = d3.select("#useFrequency");
-				drawBarGraph(element, data);
+				drawBarGraph(element, data, true);
 			}
 
 			function home(){
 				//bar chart of home location
 				var data = {{homeData|tojson|safe}};
 				var element = d3.select("#home");
-				drawBarGraph(element, data);
+				drawBarGraph(element, data, true);
 			}
 
 			function primaryTransit(){
