@@ -70,16 +70,12 @@
 			</div>
 			<div id="conflictingOpinions">
 				<h4>In spite of broad-strokes agreement, there are still some conflicting opinions</h4>
-				<div id="pro">
-					<strong>Increase</strong> parking: <em>29</em>
-					Ban <strong>cars</strong> on Telegraph: <em>3</em>
-					Better traffic code enforcement of <strong>drivers</strong>: <em>34</em>
-				</div>
-				<div id="anti">
-					<strong>Decrease</strong> parking: <em>7</em>
-					Ban <strong>bikes</strong> on Telegraph: <em>3</em>
-					Better traffic code enforcement of <strong>cyclists</strong>: <em>25</em>
-				</div>
+				<span class="pro">Ban <strong>cars</strong> on Telegraph: <em>3</em></span> 
+				<span class="anti">Ban <strong>bikes</strong> on Telegraph: <em>3</em></span></br>
+				<span class="pro"><strong>Increase</strong> parking: <em>29</em></span>
+				<span class="anti"><strong>Decrease</strong> parking: <em>7</em></span></br>
+				<span class="pro">Better traffic code enforcement of <strong>drivers</strong>: <em>34</em></span>
+				<span class="anti">Better traffic code enforcement of <strong>cyclists</strong>: <em>25</em></span></br>
 			</div>
 		</div>
 		<hr/>
@@ -468,7 +464,8 @@
 					.attr("height", innerSide)
 					.append("xhtml:body")
 						.style("font", "12pt Open Sans")
-						.html(function(d){return d});
+						.html(function(d){return d})
+						.attr("text-anchor", "middle");
 
 				//the titles
 				blocks.append("foreignObject")
