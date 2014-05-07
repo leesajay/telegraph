@@ -42,6 +42,19 @@ text {
 }
 /*****************************************************************************/
 
+#pro {
+	float: left;
+	width: 300px;
+	background-color: red;
+}
+
+#anti {
+	float: left;
+	width: 300px;
+	background-color: blue;
+}
+/*****************************************************************************/
+
 .floatMe{
 	width: 50%;
 	float: left;
