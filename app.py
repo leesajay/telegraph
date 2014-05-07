@@ -382,6 +382,7 @@ def load_page():
     primaryTransitData = getMode("Mode1")
     leastUsedTransitData = getMode("Mode6")
     teleConnection = vennReplace()
+    filterValue = "'%'"
 #     app.logger.debug("PANE 1 DATA")
 #     app.logger.debug(pane1)
 #     app.logger.debug("PANE 2 DATA")
@@ -403,7 +404,8 @@ def load_page():
                                     homeData = location,
                                     primaryTransitData = primaryTransitData, 
                                     leastUsedTransitData = leastUsedTransitData, 
-                                    connectionToTeleData = teleConnection)
+                                    connectionToTeleData = teleConnection,
+                                    dropdownValue = filterValue)
 
 @app.route('/filtered', methods=['GET', 'POST'])
 #insert everything here
