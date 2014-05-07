@@ -52,6 +52,16 @@ text {
 	margin: auto;
 }
 
+.headGraf {
+    margin-right: 50px;
+    margin-top: 0px;
+
+}
+
+.withSubhead {
+	margin-bottom: 3px;
+
+}
 /*****************************************************************************/
 .vennCircle {
 	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=60);
