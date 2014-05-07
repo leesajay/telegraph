@@ -342,7 +342,7 @@ def makeVenn(setParams):
     return vennData
 
 def vennReplace():
-    conn = s.connect("/telegraph.db")
+    conn = s.connect("telegraph.db")
     conn.text_factory = str
     cur = conn.cursor()
     
@@ -391,8 +391,7 @@ def load_page():
     location = getLocation()
     primaryTransitData = getMode("Mode1")
     leastUsedTransitData = getMode("Mode6")
-    tgraphConnection = [["Resident", "Yes"], ["Business", "Yes"], ["Work", "Yes"], ["Visit", "Yes"], ["Commute", "Yes"]]
-    vennData = (makeVenn(tgraphConnection))
+    teleConnection = vennReplace()
 #     app.logger.debug("PANE 1 DATA")
 #     app.logger.debug(pane1)
 #     app.logger.debug("PANE 2 DATA")
@@ -414,7 +413,7 @@ def load_page():
                                     homeData = location,
                                     primaryTransitData = primaryTransitData, 
                                     leastUsedTransitData = leastUsedTransitData, 
-                                    connectionToTeleData = vennReplace)
+                                    connectionToTeleData = teleConnection)
 
 @app.route('/filtered', methods=['GET', 'POST'])
 #insert everything here
@@ -431,9 +430,8 @@ def load_filtered_page():
     location = getLocation()
     primaryTransitData = getMode("Mode1")
     leastUsedTransitData = getMode("Mode6")
-    tgraphConnection = [["Resident", "Yes"], ["Business", "Yes"], ["Work", "Yes"], ["Visit", "Yes"], ["Commute", "Yes"]]
-    vennData = (makeVenn(tgraphConnection))
-#     app.logger.debug("PANE 1 DATA")
+    teleConnection = vennReplace()
+ #     app.logger.debug("PANE 1 DATA")
 #     app.logger.debug(pane1)
 #     app.logger.debug("PANE 2 DATA")
 #     app.logger.debug(textData)
@@ -454,7 +452,7 @@ def load_filtered_page():
                                     homeData = location,
                                     primaryTransitData = primaryTransitData, 
                                     leastUsedTransitData = leastUsedTransitData, 
-                                    connectionToTeleData = vennReplace,
+                                    connectionToTeleData = teleConnection,
                                     dropdownValue = filterValue)
 
 
