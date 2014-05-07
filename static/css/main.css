@@ -33,12 +33,12 @@ text {
 }
 
 #navbar a{
-	text-decoration: none;
+	text-decoration: underline;
 	color: black;
 	font-family: 'Raleway', sans-serif;
-	font-size: 16px;
-	margin-left: 10px;
-	margin-top: 5px;
+	font-size: 20px;
+	margin-left: 20px;
+	margin-top: 10px;
 }
 /*****************************************************************************/
 
