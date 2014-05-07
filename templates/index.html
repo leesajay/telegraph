@@ -64,7 +64,7 @@
 			</div>
 			<div id="conflictingOpinions">
 				<h4>In spite of broad-strokes agreement, there are still some conflicting opinions</h4>
-				<h5>Below are some improvements suggested in the survey, and the number of people who suggested them</h5>
+				<p>Below are some improvements suggested in the survey, and the number of people who suggested them</p>
 				<div id="pro">
 					Ban <strong>cars</strong> on Telegraph: <em>3</em><br/>
 					<strong>Increase</strong> parking: <em>29</em><br/>
@@ -265,10 +265,10 @@
 			function mostProposed(){
 
 				var data = [445, 397, 125, 115, 115];
-				var labels = ["More and/or more protected bike lanes", "Pedestrian realm improvements such as wider sidewalks and more crosswalks", "Improvements to bus stops", "Improve pavement conditions", "Promote awareness of bicyclists"];
+				var labels = ["More (protected) bike lanes", "Pedestrian improvements: wider sidewalks, more crosswalks", "Improvements to bus stops", "Improve pavement conditions", "Promote awareness of bicyclists"];
 
-				var width = 500,
-					barHeight = 20;
+				var width = 900,
+					barHeight = 30;
 
 				var x = d3.scale.linear()
 					.domain([0, d3.max(data)])
@@ -292,7 +292,7 @@
 					.attr("x", function(d) { return x(d) - 3; })
 					.attr("y", barHeight / 2)
 					.attr("dy", ".35em")
-					.text(function(d) { return d; });
+					.text(function(d, i) { return labels[i] + ": " + d; });
 			}
 
 			function currentlySuits(){
