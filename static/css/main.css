@@ -44,14 +44,24 @@ text {
 
 #pro {
 	float: left;
-	width: 400px;
-	background-color: red;
+	min-width: 350px;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	margin-left: 20px;
 }
 
 #anti {
 	float: left;
 	width: 400px;
-	background-color: blue;
+	margin-bottom: 10px;
+}
+
+#respondents {
+	clear: both;
+}
+
+hr {
+	clear: both;
 }
 /*****************************************************************************/
 
