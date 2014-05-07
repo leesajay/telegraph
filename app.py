@@ -341,7 +341,41 @@ def makeVenn(setParams):
     conn.close()    
     return vennData
 
+def vennReplace():
+    conn = s.connect("/telegraph.db")
+    conn.text_factory = str
+    cur = conn.cursor()
+    
+    cur.execute("SELECT Resident, Business, Work, Visit, Commute FROM r;")
+    responses = cur.fetchall()
+    cur.close()
+    conn.close()
+        
+    one = 0
+    two = 0
+    three = 0
+    four = 0
+    five = 0
 
+    for line in responses:
+        count = 0
+        for i in range(5):
+            if line[i] == "Yes":
+                count += 1
+        if count == 1:
+            one += 1
+        if count == 2:
+            two += 1
+        if count == 3:
+            three += 1
+        if count == 4:
+            four += 1
+        if count == 5:
+            five += 1
+
+    connectData = {"One connection only": one, "Two connections": two, "Three connections": three, "Four connections": four, "Five connections": five}
+    return connectData
+    
 @app.route('/', methods=['GET'])
 def sendToIndex():
     url = "http://groups.ischool.berkeley.edu/telegraph/index"
@@ -380,7 +414,7 @@ def load_page():
                                     homeData = location,
                                     primaryTransitData = primaryTransitData, 
                                     leastUsedTransitData = leastUsedTransitData, 
-                                    connectionToTeleData = vennData)
+                                    connectionToTeleData = vennReplace)
 
 @app.route('/filtered', methods=['GET', 'POST'])
 #insert everything here
@@ -420,7 +454,7 @@ def load_filtered_page():
                                     homeData = location,
                                     primaryTransitData = primaryTransitData, 
                                     leastUsedTransitData = leastUsedTransitData, 
-                                    connectionToTeleData = vennData,
+                                    connectionToTeleData = vennReplace,
                                     dropdownValue = filterValue)
 
 

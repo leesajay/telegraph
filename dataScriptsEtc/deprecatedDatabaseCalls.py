@@ -322,6 +322,7 @@ def makeVenn(setParams):
                 overlapEntry["size"] = count
                 overlaps.append(overlapEntry)
     vennData.append(overlaps)
+    print(len(overlaps))
             
             
       
@@ -330,7 +331,7 @@ def makeVenn(setParams):
     return vennData
 
 tgraphConnection = [["Resident", "Yes"], ["Business", "Yes"], ["Work", "Yes"], ["Visit", "Yes"], ["Commute", "Yes"]]
-#print(makeVenn(tgraphConnection))
+print(makeVenn(tgraphConnection))
 
 #print(getFrequency())
     
