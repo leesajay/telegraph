@@ -293,7 +293,7 @@
 				//the largest stack
 				var yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
 
-				var margin = {top: 0, right: 85, bottom: 20, left: 99},
+				var margin = {top: 0, right: 85, bottom: 20, left: 120},
 					height = 373 - margin.top - margin.bottom;
 				var width = 800 - margin.left - margin.right;
 				if(window.innerWidth > 800){
