@@ -70,10 +70,10 @@
 			</div>
 			<div id="conflictingOpinions">
 				<h4>In spite of broad-strokes agreement, there are still some conflicting opinions</h4>
-				<span class="pro"><strong>Increase</strong> parking: <em>29</em></span>
-				<span class="anti"><strong>Decrease</strong> parking: <em>7</em></span></br>
 				<span class="pro">Ban <strong>cars</strong> on Telegraph: <em>3</em></span> 
 				<span class="anti">Ban <strong>bikes</strong> on Telegraph: <em>3</em></span></br>
+				<span class="pro"><strong>Increase</strong> parking: <em>29</em></span>
+				<span class="anti"><strong>Decrease</strong> parking: <em>7</em></span></br>
 				<span class="pro">Better traffic code enforcement of <strong>drivers</strong>: <em>34</em></span>
 				<span class="anti">Better traffic code enforcement of <strong>cyclists</strong>: <em>25</em></span></br>
 			</div>
@@ -293,11 +293,11 @@
 				//the largest stack
 				var yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
 
-				var margin = {top: 0, right: 105, bottom: 20, left: 99},
+				var margin = {top: 0, right: 85, bottom: 20, left: 99},
 					height = 373 - margin.top - margin.bottom;
 				var width = 800 - margin.left - margin.right;
 				if(window.innerWidth > 800){
-					width = (window.innerWidth-50) - margin.left - margin.right;
+					width = (window.innerWidth-100) - margin.left - margin.right;
 				}
 				var y = d3.scale.ordinal()
 					.domain(labels)
@@ -463,7 +463,7 @@
 					.attr("width", innerSide)
 					.attr("height", innerSide)
 					.append("xhtml:body")
-						.style("font", "12pt sans-serif")
+						.style("font", "12pt Open Sans")
 						.html(function(d){return d});
 
 				//the titles
@@ -473,7 +473,7 @@
 					.attr("x", -180)
 					.attr("y", -150)
 					.append("xhtml:body")
-						.style("font", "14pt sans-serif")
+						.style("font", "12pt Raleway")
 						.html(function(d, i){return headlines[i];});
 			}
 
