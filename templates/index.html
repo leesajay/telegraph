@@ -104,14 +104,32 @@
 			//Utility functions
 			//-----------------------------------------------------------------------------
 
+			function maxNum(data1, data2){
+				//takes two json objects like {"bikes": 4, "cars", 5}
+				//they do NOT necessarily have the same number of values
+				//returns biggest number out of all of them
+
+				var arr1 = [];
+				for (var key in data1){
+					arr1.push(data1[key]);
+				}
+				var arr2 = [];
+				for (var key in data2){
+					arr2.push(data2[key]);
+				}
+
+				return Math.max(Math.max.apply(Math, arr1), Math.max.apply(Math, arr2));
+			}
+
 			function getDropdownValue() {
 				var dropdownValue = "{{dropdownValue|safe}}";
 				document.getElementById("filterValue").value=dropdownValue;
 			}
 			
-			function drawBarGraph(element, data, wrap){
+			function drawBarGraph(element, data, wrap, lastMax){
 
 				wrap = false || wrap;
+				lastMax = 0 || lastMax;
 
 				//sort the data by key
 				var sortable = [];
@@ -163,8 +181,11 @@
 
 				//fit the axes to the range of our data
 				x.domain(titles);
-				y.domain([0, d3.max(dataset)]);
-
+				if(lastMax==0){
+					y.domain([0, d3.max(dataset)]);
+				}else{
+					y.domain([0, lastMax]);
+				}
 
 				if(wrap){
 					svg.append("g")
@@ -355,18 +376,18 @@
  
 			}//function
 
-			function highestPriority(){
-				//bar graph of highes priority
-				var data = {{highestPriorityData|tojson|safe}};
-				var element = d3.select("#highestPriority");
-				drawBarGraph(element, data);
-			}
+			function highestAndLowestPriority(){
+				//bar graph of highest priority
+				var data1 = {{highestPriorityData|tojson|safe}};
+				var element1 = d3.select("#highestPriority");
+				var data2 = {{lowestPriorityData|tojson|safe}};
 
-			function lowestPriority(){
+				var max = maxNum(data1, data2);
+
+				drawBarGraph(element, data1, false, max);
 				//bar graph of lowest priority
-				var data = {{lowestPriorityData|tojson|safe}};
-				var element = d3.select("#lowestPriority");
-				drawBarGraph(element, data);
+				var element2 = d3.select("#lowestPriority");
+				drawBarGraph(element, data2, false, max);
 			}
 
 
@@ -446,11 +467,17 @@
 
 			//--------------------------------------------------------------
 
-			function useFrequency(){
-				//bar chart of use frequency
-				var data = {{useFrequencyData|tojson|safe}};
-				var element = d3.select("#useFrequency");
-				drawBarGraph(element, data, true);
+			function frequencyAndPrimary(){
+				var data1 = {{useFrequencyData|tojson|safe}};
+				var data2 = {{primaryTransitData|tojson|safe}};
+
+				var max = maxNum(data1, data2);
+
+				var element1 = d3.select("#useFrequency");
+				drawBarGraph(element1, data1, true, max);
+
+				var element2 = d3.select("#primaryTransit");
+				drawBarGraph(element2, data2, false, max);
 			}
 
 			function home(){
@@ -458,13 +485,6 @@
 				var data = {{homeData|tojson|safe}};
 				var element = d3.select("#home");
 				drawBarGraph(element, data, true);
-			}
-
-			function primaryTransit(){
-				//bar chart of primary transit
-				var data = {{primaryTransitData|tojson|safe}};
-				var element = d3.select("#primaryTransit");
-				drawBarGraph(element, data);
 			}
 
 			function connectionToTele(){
@@ -483,12 +503,11 @@
 			//main
 			//------------------------------------------------------
 			currentlySuits();
-			highestPriority();
+			highestAndLowestPriority();
 			lowestPriority();
 			quotes();
-			useFrequency();
 			home();
-			primaryTransit();
+			frequencyAndPrimary();
 			connectionToTele();
 			getDropdownValue();
 
