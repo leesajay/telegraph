@@ -12,7 +12,11 @@ h1, h2, h3, h4, h5 {
 }
 
 h1 {
-	padding-top: 20px;
+	padding-top: 30px;
+}
+
+.dataPane {
+	padding-top: 30px;
 }
 
 text {
@@ -25,7 +29,7 @@ text {
 	position: fixed;
 	top: 0;
 	left: 0;
-	height: 20px;
+	height: 30px;
 }
 
 #navbar a{
@@ -33,6 +37,8 @@ text {
 	color: black;
 	font-family: 'Raleway', sans-serif;
 	font-size: 16px;
+	padding-left: 10px;
+	padding-top: 5px;
 }
 /*****************************************************************************/
 
