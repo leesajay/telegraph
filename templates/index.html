@@ -68,6 +68,8 @@
 					<li>Promote awareness of bicyclists: <em>115</em></li>
 				</ul>
 			</div>
+			<div id="mostProposedChart">
+			</div>
 			<div id="conflictingOpinions">
 				<h4>In spite of broad-strokes agreement, there are still some conflicting opinions</h4>
 				<h5>Below are some improvements suggested in the survey, and the number of people who suggested them</h5>
@@ -102,11 +104,10 @@
 				<!--javascript will put stuff here-->
 			</div>
 			<div id="connectionToTele" class="floatMe">
-				<h4 class="withSubhead">What is your connection to Telegraph?</h4>
-				<h5 class="headGraf">Respondents chose from these options: living nearby, 
+				<h4 class="withSubhead">How connected are you to Telegraph?</h4>
+				<h5 class="headGraf">Respondents explained their connection to the avenue by choosing all that apply: living nearby, 
 				working nearby, patronizing nearby businesses, 
-				commuting via the avenue, and owning a business there. Clearly, 
-				most people have multiple connections to Telegraph.</h5> 
+				commuting via the avenue, and owning a business there. This chart shows how many people have how many connections.</h5> 
 				 
 				<!--javascript will put stuff here-->
 			</div>
@@ -470,7 +471,7 @@
 					.append("xhtml:body")
 						.style("font", "12pt Open Sans")
 						.html(function(d){return d})
-						.attr("text-anchor", "middle");
+						.style("text-anchor", "middle");
 
 				//the titles
 				blocks.append("foreignObject")
@@ -483,6 +484,23 @@
 						.html(function(d, i){return headlines[i];});
 			}
 
+			//--------------------------------------------------------------
+			
+			function mostProposed() {
+			var data = [4, 8, 15, 16, 23, 42];
+
+			var x = d3.scale.linear()
+				.domain([0, d3.max(data)])
+				.range([0, 420]);
+
+			d3.select("#mostProposedChart")
+			  .selectAll("div")
+			  .data(data)
+			  .enter().append("div")
+			  .style("width", function(d) { return x(d) + "px"; })
+			  .style("background-color", "blue")
+			  .text(function(d) { return d; });
+			}
 			//--------------------------------------------------------------
 
 			function frequencyAndPrimary(){
@@ -521,6 +539,7 @@
 			frequencyAndPrimary();
 			connectionToTele();
 			getDropdownValue();
+			mostProposed();
 
 		</script>
 	</body>
