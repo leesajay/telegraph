@@ -100,7 +100,7 @@
 		</div>
 		<hr/>
 		<div id="footer">
-			<p>Created by Lisa Jervis and Molly Robison in 2014 for Information Vizualization at the UC Berkeley ISchool.</p>
+			<p>Created by Lisa Jervis and Molly Robison in 2014 for Information Visualization at the UC Berkeley ISchool.</p>
 		</div>
 		<script type="text/javascript" src="static/js/d3.v3.js"></script>
 		<script type="text/javascript" src="static/js/jquery-1.11.1.min.js"></script>
@@ -494,14 +494,8 @@
 			function connectionToTele(){
 				//venn diagram
 				var data = {{connectionToTeleData|tojson|safe}};
-				var sets = data[0],
-					overlaps = data[1];
-
-				// get positions for each set
-				sets = venn.venn(sets, overlaps);
-
-				// draw the diagram
-				var diagram = venn.drawD3Diagram(d3.select("#connectionToTele"), sets, 300, 300, {opacity: 0.9});
+				var element = d3.select("#connectionToTele");
+				drawBarGraph(element, data, true, 0);
 			}
 			//------------------------------------------------------------
 			//main
