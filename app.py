@@ -119,26 +119,16 @@ def getRandom(targetField):
     responseID = str(random.randint(1,1108))
     SQL = "SELECT " + targetField + " FROM r WHERE ResponseID = ?;"
     data = (responseID,)
-#     app.logger.debug("executing SQL")
     cur.execute(SQL, data)
-#     candidate = "fuzzy pickles"
-#     app.logger.debug(candidate)
-#     app.logger.debug("that should have been fuzzy pickles")
     candidate = cur.fetchone()[0]
-#     app.logger.debug(candidate)
-#     app.logger.debug("that should not have been fuzzy pixkles")
-    #I have tried many combos of different Booleans to exclude both None and '' and I can never get them both
-    # excluded and I don't know why!!
-#     if type(candidate) == NoneType:
-#         app.logger.debug("PANIC")
     if len(candidate) > 0:
         cur.close()
         conn.close()
+        if len(candidate) > 140:
+            candidate = candidate.split(".", 1)[0]
         return candidate
+
     else: 
-#         app.logger.debug("Candidate was bad! This is what it was:")
-#         app.logger.debug(candidate)
-#         app.logger.debug("trying again")
         return(getRandom(targetField))
         
 def makePane2():
