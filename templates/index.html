@@ -6,6 +6,12 @@
 		<link href='http://fonts.googleapis.com/css?family=Raleway:600|Open+Sans' rel='stylesheet' type='text/css'>
 	</head>
 	<body>
+		<div id="navbar">
+			<a href="#">Introdution</a>
+			<a href="#opinion">Opinions</a>
+			<a href="#quotesPane">Quotes</a>
+			<a href="#respondents">Demographics</a>
+		</div>
 		<h1>Telegraph Avenue: Usage, Opinions and Ideas</h1>
 		<h2>Complete Streets Project survey results</h2>
 		<p>The City of Oakland is currently undertaking the <a href="http://www2.oaklandnet.com/Government/o/PWA/o/EC/s/TelegraphAvenue/index.htm" target="_blank">Telegraph Avenue Complete Streets Project</a>,
@@ -127,9 +133,6 @@
 			}
 			
 			function drawBarGraph(element, data, wrap, lastMax){
-
-				wrap = false || wrap;
-				lastMax = 0 || lastMax;
 
 				//sort the data by key
 				var sortable = [];
@@ -384,10 +387,10 @@
 
 				var max = maxNum(data1, data2);
 
-				drawBarGraph(element, data1, false, max);
+				drawBarGraph(element1, data1, false, max);
 				//bar graph of lowest priority
 				var element2 = d3.select("#lowestPriority");
-				drawBarGraph(element, data2, false, max);
+				drawBarGraph(element2, data2, false, max);
 			}
 
 
@@ -484,7 +487,7 @@
 				//bar chart of home location
 				var data = {{homeData|tojson|safe}};
 				var element = d3.select("#home");
-				drawBarGraph(element, data, true);
+				drawBarGraph(element, data, true, 0);
 			}
 
 			function connectionToTele(){
@@ -504,7 +507,6 @@
 			//------------------------------------------------------
 			currentlySuits();
 			highestAndLowestPriority();
-			lowestPriority();
 			quotes();
 			home();
 			frequencyAndPrimary();
