@@ -21,7 +21,7 @@
 		 Telegraph, how they feel about it, and how they think it should be improved. This website summarizes the results.</p>
 		<hr/>
 		<div class="dataPane" id="opinion">
-			<h3>Respondents broadly agree: Telegraph doesn't work very well for anyone, but bikes have it the hardest</h3>
+			<h3>Respondents broadly agree: Telegraph doesn't work very well for anyone, but it is the worst for bicyclists</h3>
 			<form id="filter" action="/telegraph/filtered" method="POST">
 				<label for="filterValue">See answers from Telegraph users who primarily: </label>
 				<select name="filterValue" id="filterValue">
@@ -35,7 +35,7 @@
 				<input type="submit" value="See the filtered data" name="filterButton">
 			</form>
 			<div id="currentlySuits">
-				<h4>The current configuration suits...</h4>
+				<h4>Do you agree or disagree with this statement: The current configuration of Telegraph works well for travelers using the following modes of transit.</h4>
 				<!--javascript will put stuff here-->
 			</div>
 			<div id="highestPriority", class="floatMe">
@@ -63,8 +63,8 @@
 				<div id="proposedChart"></div>
 			</div>
 			<div id="conflictingOpinions">
-				<h4>In spite of broad-strokes agreement, there are still some conflicting opinions</h4>
-				<p>Below are some improvements suggested in the survey, and the number of people who suggested them</p>
+				<h4>Dueling views</h4>
+				<p>In spite of broad-strokes agreement, there are still some conflicting opinions</p>
 				<div id="pro">
 					Ban <strong>cars</strong> on Telegraph: <em>3</em><br/>
 					<strong>Increase</strong> parking: <em>29</em><br/>
@@ -106,7 +106,7 @@
 		</div>
 		<hr/>
 		<div id="footer">
-			<p>Created by Lisa Jervis and Molly Robison in 2014 for Information Visualization at the UC Berkeley ISchool.</p>
+			<p>Created by Lisa Jervis and Molly Robison in 2014 for Information Visualization at the UC Berkeley School of Information.</p>
 		</div>
 		<script type="text/javascript" src="static/js/d3.v3.js"></script>
 		<script type="text/javascript" src="static/js/jquery-1.11.1.min.js"></script>
@@ -265,7 +265,7 @@
 			function mostProposed(){
 
 				var data = [445, 397, 125, 115, 115];
-				var labels = ["More (protected) bike lanes", "Pedestrian improvements: wider sidewalks, more crosswalks", "Improvements to bus stops", "Improve pavement conditions", "Promote awareness of bicyclists"];
+				var labels = ["Add more and/or more protected bike lanes", "Widen sidewalks, add more crosswalks, and make other pedestrian improvements", "Improve bus stops/shelters", "Improve pavement conditions", "Promote awareness of bicyclists"];
 
 				var width = 900,
 					barHeight = 30;
@@ -299,7 +299,7 @@
 				//the likert scale viz
 				var element = d3.select("#currentlySuits");
 
-				var cats = ["Strongly Disagree", "Disagree", "Neutal/No Answer", "Agree", "Strongly Agree"];
+				var cats = ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"];
 				var data = {{currentlySuitsData|tojson|safe}};
 
 				var labels = data.map(function(d) {return d.key;});
