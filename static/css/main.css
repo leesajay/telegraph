@@ -11,6 +11,10 @@ h1, h2, h3, h4, h5 {
 	font-family: 'Raleway', sans-serif;	
 }
 
+h1 {
+	padding-top: 20px;
+}
+
 text {
 	font-family: 'Open Sans', sans-serif;
 }
@@ -19,6 +23,16 @@ text {
 	width: 100%;
 	background-color: crimson;
 	position: fixed;
+	top: 0;
+	left: 0;
+	height: 20px;
+}
+
+#navbar a{
+	text-decoration: none;
+	color: black;
+	font-family: 'Raleway', sans-serif;
+	font-size: 16px;
 }
 /*****************************************************************************/
 
