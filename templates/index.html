@@ -223,9 +223,15 @@
 				gy.selectAll("g").filter(function(d) { return d; })
 					.classed("minor", true);
 
-				gy.selectAll("text")
-					.attr("x", -6)
-					.attr("dy", -4);
+				if(reverse==false){
+					gy.selectAll("text")
+						.attr("x", -6)
+						.attr("dy", -4);
+				}else{
+					gy.selectAll("text")
+						.attr("x", -16)
+						.attr("dy", -4);
+				}
 
 				//make the bars
 				svg.selectAll(".bar")
@@ -445,8 +451,8 @@
 				var data = {{quoteData|safe}};
 				var headlines = ["Here's what one person likes about Telegraph:", "Here's what another person wishes were different:", "And here's an idea from yet another person:"];
 				var margin = {left: 20, right: 20, top: 0, bottom: 20};
-				var width = 900 - margin.left - margin.right;
-				if(window.innerWidth > 900){
+				var width = 800 - margin.left - margin.right;
+				if(window.innerWidth > 800){
 					width = (window.innerWidth) - margin.left - margin.right;
 				}
 
