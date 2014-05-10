@@ -139,14 +139,19 @@
 				document.getElementById("filterValue").value=dropdownValue;
 			}
 			
-			function drawBarGraph(element, data, wrap, lastMax){
+			function drawBarGraph(element, data, wrap, lastMax, reverse){
 
-				//sort the data by key
 				var sortable = [];
 				for (var key in data){
-					sortable.push([key, data[key]])
+					sortable.push([key, data[key]]);
 				}
-				sortable.sort(function(a, b) {return a[1] - b[1]})
+				if(reverse==false){
+					//sort the data by key
+					sortable.sort(function(a, b) {return a[1] - b[1]});
+				}else{
+					//reverse sort
+					sortable.sort(function(a, b) {return b[1] - a[1]});
+				}
 
 				//split up the data into titles and values
 				var dataset = [];
@@ -427,10 +432,10 @@
 
 				var max = maxNum(data1, data2);
 
-				drawBarGraph(element1, data1, false, max);
+				drawBarGraph(element1, data1, false, max, false);
 				//bar graph of lowest priority
 				var element2 = d3.select("#lowestPriority");
-				drawBarGraph(element2, data2, false, max);
+				drawBarGraph(element2, data2, false, max, false);
 			}
 
 
@@ -440,9 +445,9 @@
 				var data = {{quoteData|safe}};
 				var headlines = ["Here's what one person likes about Telegraph:", "Here's what another person wishes were different:", "And here's an idea from yet another person:"];
 				var margin = {left: 20, right: 20, top: 0, bottom: 20};
-				var width = 800 - margin.left - margin.right;
-				if(window.innerWidth > 800){
-					width = (window.innerWidth-100) - margin.left - margin.right;
+				var width = 900 - margin.left - margin.right;
+				if(window.innerWidth > 900){
+					width = (window.innerWidth) - margin.left - margin.right;
 				}
 
 				var xs = [];
@@ -518,24 +523,24 @@
 				var max = maxNum(data1, data2);
 
 				var element1 = d3.select("#useFrequency");
-				drawBarGraph(element1, data1, true, max);
+				drawBarGraph(element1, data1, true, max, true);
 
 				var element2 = d3.select("#primaryTransit");
-				drawBarGraph(element2, data2, false, max);
+				drawBarGraph(element2, data2, false, max, true);
 			}
 
 			function home(){
 				//bar chart of home location
 				var data = {{homeData|tojson|safe}};
 				var element = d3.select("#home");
-				drawBarGraph(element, data, true, 0);
+				drawBarGraph(element, data, true, 0, true);
 			}
 
 			function connectionToTele(){
 				//venn diagram
 				var data = {{connectionToTeleData|tojson|safe}};
 				var element = d3.select("#connectionToTele");
-				drawBarGraph(element, data, true, 0);
+				drawBarGraph(element, data, true, 0, true);
 			}
 			//------------------------------------------------------------
 			//main
