@@ -34,6 +34,7 @@
 				</select>
 				<input type="submit" value="See the filtered data" name="filterButton">
 			</form>
+			<span>Number of users in this category: {{count}}</span>
 			<div id="currentlySuits">
 				<h4>Do you agree or disagree with this statement: The current configuration of Telegraph works well for travelers using the following modes of transit.</h4>
 				<!--javascript will put stuff here-->
@@ -46,6 +47,8 @@
 				<h4>What mode of transportation should have the lowest priority for improvements?</h4>
 				<!--javascript will put stuff here-->
 			</div>
+			<p>Note: some respondents named multiple modes of transit as their primary mode, and so are counted more than once.<br>
+			Numbers represent answer count, not percentages.</p>
 		</div>
 		<hr/>
 		<div class="dataPane" id="quotesPane">

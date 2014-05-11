@@ -77,36 +77,37 @@ def makePane1(filterValue):
             itemDict["key"] = "Pedestrians"
             itemDict["values"] = listAnswerCount(configAnswers, item, filterField, operator, filterValue)
             configuration.append(itemDict)
-            print(itemDict)
         if item == "GoodBikes":
             itemDict["key"] = "Bicyclists"
             itemDict["values"] = listAnswerCount(configAnswers, item, filterField, operator, filterValue)
             configuration.append(itemDict)
-            print(itemDict)
         if item == "GoodCars":
             itemDict["key"] = "Drivers"
             itemDict["values"] = listAnswerCount(configAnswers, item, filterField, operator, filterValue)
             configuration.append(itemDict)
-            print(itemDict)
         if item == "GoodTransit":
             itemDict["key"] = "Transit riders"
             itemDict["values"] = listAnswerCount(configAnswers, item, filterField, operator, filterValue)
             configuration.append(itemDict)
-            print(itemDict)
     pane1.append(configuration)
+    
+    #for the # of people answering
+    conn = s.connect("telegraph.db")
+    conn.text_factory = str
+    cur = conn.cursor()    
+    cur.execute("SELECT COUNT(ResponseID) FROM r WHERE Mode1 LIKE " + filterValue + ";")
+    count = cur.fetchone()[0]
 
     #for the highest priority improvements chart
     priorityAnswers = ("Biking", "Driving", "Transit", "Walking")
     hiPri = answerCount(priorityAnswers, "Improve1", filterField, operator, filterValue)
-    #print(hiPri)
     pane1.append(hiPri)
-    #print(graphData)
 
     #for the lowest priority improvements chart
     loPri = answerCount(priorityAnswers, "Improve4", filterField, operator, filterValue)
-    #print(loPri)
     pane1.append(loPri)
-    #print(pane1)
+    
+    pane1.append(count)
     
     return pane1
     
@@ -399,6 +400,7 @@ def load_page():
                                     currentlySuitsData = pane1[0],
                                     highestPriorityData = pane1[1],
                                     lowestPriorityData = pane1[2],
+                                    count = pane1[3],
                                     quoteData = textData,
                                     useFrequencyData = frequency,
                                     homeData = location,
@@ -439,6 +441,7 @@ def load_filtered_page():
                                     currentlySuitsData = pane1[0],
                                     highestPriorityData = pane1[1],
                                     lowestPriorityData = pane1[2],
+                                    count = pane1[3],
                                     quoteData = textData,
                                     useFrequencyData = frequency,
                                     homeData = location,
